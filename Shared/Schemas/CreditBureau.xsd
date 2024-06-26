@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/CreditBureau"
+	xmlns:tns="http://www.example.org/CreditBureau"
+	elementFormDefault="qualified" xmlns:t="uri_types" >
+	<import namespace="uri_types" schemaLocation="types.xsd" />
+	<complexType name="CreditBureau_input_type">
+		<sequence>
+			<element name="cust_input" type="t:CustomerInfo_type"
+				minOccurs="1" maxOccurs="1" />
+		</sequence>
+	</complexType>
+	<complexType name="CreditBureau_output_type">
+		<sequence>
+			<element name="cust_credit_output" type="t:CustomerCreditHistory_type"
+				minOccurs="1" maxOccurs="1" />
+		</sequence>
+	</complexType>
+	<element name="CreditBureau_input"
+		type="tns:CreditBureau_input_type" />
+	<element name="CreditBureau_output"
+		type="tns:CreditBureau_output_type" />
+</schema>
