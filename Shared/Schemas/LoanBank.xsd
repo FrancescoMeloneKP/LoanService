@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://www.example.org/LoanBank"
+	xmlns:tns="http://www.example.org/LoanBank"
+	elementFormDefault="qualified" xmlns:t="uri_types" xmlns:ls="http://www.example.org/LoanService">
+	<import namespace="uri_types"
+		schemaLocation="types.xsd" />
+	<import namespace="http://www.example.org/LoanService"
+		schemaLocation="LoanService.xsd" />
+	<complexType name="LoanBank_input_type">
+		<sequence>
+			<element name="loanservice_input" type="ls:LoanService_input_type"
+				minOccurs="1" maxOccurs="1" />
+			<element name="cust_hystory_input" type="t:CustomerCreditHistory_type"
+				minOccurs="1" maxOccurs="1" />
+		</sequence>
+	</complexType>
+	<complexType name="LoanBank_output_type">
+		<sequence>
+			<element name="bank_cond_output" type="t:BankCondition_type"
+				minOccurs="1" maxOccurs="1" />
+		</sequence>
+	</complexType>
+	<element name="LoanBank_input" type="tns:LoanBank_input_type" />
+	<element name="LoanBank_output" type="tns:LoanBank_output_type" />
+</schema>
