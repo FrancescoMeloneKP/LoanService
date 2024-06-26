@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" targetNamespace="uri_types"
+	xmlns:tns="uri_types">
+	<xs:complexType name="CustomerInfo">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="surname" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="age" type="xs:integer"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="annual_salary" type="xs:decimal" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="tax_code" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="LoanInfo">
+		<xs:sequence>
+			<xs:element name="amount" type="xs:decimal" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="n_payments" type="xs:integer" minOccurs="1"
+				maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BankCondition">
+		<xs:sequence>
+			<xs:element name="bank_name" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="taeg" type="xs:decimal" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="tan" type="xs:decimal"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="payments_number" type="xs:integer" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="monthly_amount" type="xs:decimal" minOccurs="1"
+				maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CustomerCreditEvent">
+		<xs:sequence>
+			<xs:element name="loan_start_date" type="xs:date" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="loan_amount" type="xs:decimal" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="loan_monthly_payment" type="xs:decimal"
+				minOccurs="1" maxOccurs="1" />
+			<xs:element name="loan_status" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+			<xs:element name="loan_last_payment_date" type="xs:string" minOccurs="1"
+				maxOccurs="1" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="CustomerCreditHistory">
+		<xs:sequence>
+			<xs:element name="CUSTOMER_CREDIT_EVENT" type="tns:CustomerCreditEvent" minOccurs="1"
+				maxOccurs="unbounded" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="CUSTOMER_CREDIT_HISTORY" type="tns:CustomerCreditHistory" />
+</xs:schema>
