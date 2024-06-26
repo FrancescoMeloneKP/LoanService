@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://www.tibco.com/CreditBureau/"
+	xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:b="http://www.example.org/CreditBureau"
+	targetNamespace="http://www.tibco.com/CreditBureau/">
+	<import location="../Schemas/CreditBureau.xsd"
+		namespace="http://www.example.org/CreditBureau" />
+	<message name="CustomerCreditHistoryRequest">
+		<part name="body" type="b:CreditBureau_input_type" />
+	</message>
+	<message name="CustomerCreditHistoryResponse">
+		<part name="body" type="b:CreditBureau_output_type" />
+	</message>
+	<portType name="CBpt">
+		<operation name="SelectCreditHistory">
+			<input message="tns:CustomerCreditHistoryRequest" />
+			<output message="tns:CustomerCreditHistoryResponse" />
+		</operation>
+	</portType>
+</definitions>
