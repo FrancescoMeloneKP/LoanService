@@ -7,7 +7,7 @@
         <parameters xmi:id="_rAeh0DRkEe-Rm9QGFyGmDw">
           <parameterMapping xmi:id="_rAeh0TRkEe-Rm9QGFyGmDw" parameterName="name" parameterType="Query" dataType="string" description=""/>
           <parameterMapping xmi:id="_ry4PIDRkEe-Rm9QGFyGmDw" parameterName="surname" parameterType="Query" dataType="string" description=""/>
-          <parameterMapping xmi:id="_r-dNADRkEe-Rm9QGFyGmDw" parameterName="age" parameterType="Query" dataType="string" description=""/>
+          <parameterMapping xmi:id="_r-dNADRkEe-Rm9QGFyGmDw" parameterName="age" parameterType="Query" dataType="integer#int32" description=""/>
           <parameterMapping xmi:id="_RT4yYDRlEe-Rm9QGFyGmDw" parameterName="salary" parameterType="Query" dataType="string" description=""/>
           <parameterMapping xmi:id="_RhuaEDRlEe-Rm9QGFyGmDw" parameterName="tax_code" parameterType="Query" dataType="string" required="true" description=""/>
           <parameterMapping xmi:id="_a9JysDRlEe-Rm9QGFyGmDw" parameterName="amount" parameterType="Query" dataType="string" description=""/>
