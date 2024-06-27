@@ -9,6 +9,7 @@ TIBCO-BW-SharedModule: META-INF/module.bwm
 TIBCO-BW-Edition: bwe
 TIBCO-BW-JobSharedVariables: META-INF/module.jsv
 Require-Capability: com.tibco.bw.model; filter:="(name=bwext)",
+ com.tibco.bw.sharedresource.model; filter:="(name=bw.httpclient)",
  com.tibco.bw.sharedresource.model; filter:="(name=bw.jdbc)",
  com.tibco.bw.sharedresource.model; filter:="(name=bw.jmsconnection)"
 TIBCO-BW-ModuleSharedVariables: META-INF/module.msv
