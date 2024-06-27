@@ -6,6 +6,8 @@
     xmlns:info="http://www.tibco.com/bw/process/info"
     xmlns:ns="http://xmlns.example.com/20240627110349PLT"
     xmlns:ns0="http://www.tibco.com/pe/EngineTypes"
+    xmlns:ns1="http://www.tibco.com/CreditBureau/"
+    xmlns:ns2="http://tns.tibco.com/bw/palette/internal/activityerror+9b583b55-cd34-4feb-afa0-86bde3bdcaca"
     xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912"
     xmlns:sca-bpel="http://docs.oasis-open.org/ns/opencsa/sca-bpel/200801"
     xmlns:tibex="http://www.tibco.com/bpel/2007/extensions"
@@ -19,6 +21,8 @@
         <task name="Invoke">
             <endingVariables>
                 <variable>Invoke-input</variable>
+                <variable>Invoke</variable>
+                <variable>get</variable>
             </endingVariables>
         </task>
     </tibex:VariableDescriptor>
@@ -183,12 +187,25 @@
             </complexType>
             <element name="DuplicateKeyException" type="tns:DuplicateKeyExceptionType"/>
         </schema>
+        <schema elementFormDefault="unqualified"
+            targetNamespace="http://tns.tibco.com/bw/palette/internal/activityerror+9b583b55-cd34-4feb-afa0-86bde3bdcaca"
+            xmlns="http://www.w3.org/2001/XMLSchema"
+            xmlns:Q1="http://schemas.tibco.com/bw/pe/plugin/5.0/exceptions" xmlns:tns="http://tns.tibco.com/bw/palette/internal/activityerror+9b583b55-cd34-4feb-afa0-86bde3bdcaca">
+            <import namespace="http://schemas.tibco.com/bw/pe/plugin/5.0/exceptions"/>
+            <element name="ActivityErrorData" type="tns:ActivityErrorDataType"/>
+            <complexType name="ActivityErrorDataType">
+                <choice>
+                    <element maxOccurs="1" minOccurs="0" ref="Q1:ActivityTimedOutException"/>
+                </choice>
+            </complexType>
+        </schema>
         <wsdl:definitions
             targetNamespace="http://xmlns.example.com/20240627110349PLT"
             xmlns:extns="http://tns.tibco.com/bw/REST"
             xmlns:extns1="http://www.example.org/LoanService"
             xmlns:extns2="http://xmlns.example.com/Loan/parameters"
             xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype"
+            xmlns:ptyp="http://www.tibco.com/CreditBureau/"
             xmlns:tibex="http://www.tibco.com/bpel/2007/extensions"
             xmlns:tns="http://xmlns.example.com/20240627110349PLT"
             xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop"
@@ -196,9 +213,13 @@
             <plnk:partnerLinkType name="partnerLinkType">
                 <plnk:role name="use" portType="tns:loan"/>
             </plnk:partnerLinkType>
+            <plnk:partnerLinkType name="partnerLinkType1">
+                <plnk:role name="use" portType="ptyp:CBpt"/>
+            </plnk:partnerLinkType>
             <wsdl:import namespace="http://tns.tibco.com/bw/REST"/>
             <wsdl:import namespace="http://www.example.org/LoanService"/>
             <wsdl:import namespace="http://xmlns.example.com/Loan/parameters"/>
+            <wsdl:import namespace="http://www.tibco.com/CreditBureau/"/>
             <wsdl:message name="getRequest">
                 <wsdl:part element="extns:httpHeaders"
                     name="httpHeaders" tibex:source="bw.rest"/>
@@ -746,19 +767,44 @@
             <bendpoints points="[25, -6, -85, 0]$[86, 0, -24, 6]" xsi:type="notation:RelativeBendpoints"/>
         </edges>
     </notation:Diagram>
+    <tibex:NamespaceRegistry enabled="true">
+        <tibex:namespaceItem namespace="uri_types" prefix="tns3"/>
+        <tibex:namespaceItem
+            namespace="http://xmlns.example.com/Loan/parameters" prefix="tns"/>
+        <tibex:namespaceItem
+            namespace="http://www.example.org/CreditBureau" prefix="tns2"/>
+        <tibex:namespaceItem
+            namespace="http://www.tibco.com/CreditBureau/" prefix="tns1"/>
+        <tibex:namespaceItem
+            namespace="http://www.w3.org/2001/XMLSchema" prefix="xsd"/>
+    </tibex:NamespaceRegistry>
     <bpws:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://tns.tibco.com/bw/REST"/>
     <bpws:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.example.org/LoanService"/>
     <bpws:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://xmlns.example.com/Loan/parameters"/>
+    <bpws:import importType="http://schemas.xmlsoap.org/wsdl/" namespace="http://www.tibco.com/CreditBureau/"/>
     <bpws:partnerLinks>
         <bpws:partnerLink myRole="use" name="loan"
             partnerLinkType="ns:partnerLinkType" sca-bpel:ignore="false" sca-bpel:service="loan"/>
+        <bpws:partnerLink name="CBpt"
+            partnerLinkType="ns:partnerLinkType1" partnerRole="use"
+            sca-bpel:ignore="true" sca-bpel:reference="CBpt" sca-bpel:wiredByImpl="false">
+            <tibex:ReferenceWire dynamic="false" inline="false"
+                processConfigurationName=""
+                processName="credit_b.CreditBureau" serviceName="CBpt"/>
+        </bpws:partnerLink>
     </bpws:partnerLinks>
     <bpws:variables>
         <bpws:variable element="ns0:ProcessContext"
             name="_processContext" sca-bpel:internal="true"/>
         <bpws:variable messageType="ns:getRequest" name="get" sca-bpel:internal="true"/>
         <bpws:variable messageType="ns:getResponse" name="getOut-input" sca-bpel:internal="true"/>
-        <bpws:variable name="Invoke-input" sca-bpel:internal="true"/>
+        <bpws:variable messageType="ns1:CustomerCreditHistoryRequest"
+            name="Invoke-input" sca-bpel:internal="true"/>
+        <bpws:variable messageType="ns1:CustomerCreditHistoryResponse"
+            name="Invoke" sca-bpel:internal="true"/>
+        <bpws:variable element="ns2:ActivityErrorData"
+            name="_error_Invoke" sca-bpel:internal="true"/>
+        <bpws:variable element="ns0:ErrorReport" name="_error" sca-bpel:internal="true"/>
     </bpws:variables>
     <bpws:extensions>
         <bpws:extension mustUnderstand="no" namespace="http://www.eclipse.org/gmf/runtime/1.0.2/notation"/>
@@ -795,14 +841,23 @@
                                 tibex:xpdlId="861ffb03-ba8c-4ac0-b0d1-ced44e080a10" variable="getOut-input">
                                 <tibex:inputBindings>
                                     <tibex:partBinding
-                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?> &lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://xmlns.example.com/20240627110349PLT&quot; version=&quot;2.0&quot;> &lt;xsl:template name=&quot;getOut-input&quot; match=&quot;/&quot;> &lt;tns:getResponse/> &lt;/xsl:template> &lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns4=&quot;http://xmlns.example.com/20240627110349PLT&quot; version=&quot;2.0&quot;>&#xa;    &lt;xsl:template name=&quot;getOut-input&quot; match=&quot;/&quot;>&#xa;        &lt;tns4:getResponse/>&#xa;    &lt;/xsl:template>&#xa;&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
                                 </tibex:inputBindings>
                                 <bpws:targets>
                                     <bpws:target linkName="CallProcessTogetOut"/>
                                 </bpws:targets>
                             </bpws:reply>
                             <bpws:invoke inputVariable="Invoke-input"
-                                name="Invoke" tibex:xpdlId="9b583b55-cd34-4feb-afa0-86bde3bdcaca">
+                                name="Invoke"
+                                operation="SelectCreditHistory"
+                                outputVariable="Invoke"
+                                partnerLink="CBpt" portType="ns1:CBpt" tibex:xpdlId="9b583b55-cd34-4feb-afa0-86bde3bdcaca">
+                                <tibex:inputBinding expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tns="http://xmlns.example.com/Loan/parameters" xmlns:tns1="http://www.tibco.com/CreditBureau/" xmlns:tns2="http://www.example.org/CreditBureau" xmlns:tns3="uri_types" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="2.0"&gt;&lt;xsl:param name="get"/&gt;&lt;xsl:template name="Invoke-input" match="/"&gt;&lt;tns1:CustomerCreditHistoryRequest&gt;&lt;body&gt;&lt;tns2:cust_input&gt;&lt;tns3:name&gt;&lt;xsl:value-of select="$get/parameters/tns:loanGetParameters/tns:name"/&gt;&lt;/tns3:name&gt;&lt;tns3:surname&gt;&lt;xsl:value-of select="$get/parameters/tns:loanGetParameters/tns:surname"/&gt;&lt;/tns3:surname&gt;&lt;tns3:age&gt;&lt;xsl:value-of select="xsd:integer($get/parameters/tns:loanGetParameters/tns:age)"/&gt;&lt;/tns3:age&gt;&lt;tns3:annual_salary&gt;&lt;xsl:value-of select="xsd:decimal($get/parameters/tns:loanGetParameters/tns:salary)"/&gt;&lt;/tns3:annual_salary&gt;&lt;tns3:tax_code&gt;&lt;xsl:value-of select="$get/parameters/tns:loanGetParameters/tns:tax_code"/&gt;&lt;/tns3:tax_code&gt;&lt;/tns2:cust_input&gt;&lt;/body&gt;&lt;/tns1:CustomerCreditHistoryRequest&gt;&lt;/xsl:template&gt;&lt;/xsl:stylesheet&gt;</tibex:inputBinding>
+                                <tibex:inputBindings>
+                                    <tibex:partBinding
+                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://xmlns.example.com/Loan/parameters&quot; xmlns:tns1=&quot;http://www.tibco.com/CreditBureau/&quot; xmlns:tns2=&quot;http://www.example.org/CreditBureau&quot; xmlns:tns3=&quot;uri_types&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; version=&quot;2.0&quot;>&#xa;    &lt;xsl:param name=&quot;get.parameters&quot;/>&#xa;    &lt;xsl:template name=&quot;Invoke-input&quot; match=&quot;/&quot;>&#xa;        &lt;body>&#xa;            &lt;tns2:cust_input>&#xa;                &lt;tns3:name>&#xa;                    &lt;xsl:value-of select=&quot;$get.parameters/tns:name&quot;/>&#xa;                &lt;/tns3:name>&#xa;                &lt;tns3:surname>&#xa;                    &lt;xsl:value-of select=&quot;$get.parameters/tns:surname&quot;/>&#xa;                &lt;/tns3:surname>&#xa;                &lt;tns3:age>&#xa;                    &lt;xsl:value-of select=&quot;xsd:integer($get.parameters/tns:age)&quot;/>&#xa;                &lt;/tns3:age>&#xa;                &lt;tns3:annual_salary>&#xa;                    &lt;xsl:value-of select=&quot;xsd:decimal($get.parameters/tns:salary)&quot;/>&#xa;                &lt;/tns3:annual_salary>&#xa;                &lt;tns3:tax_code>&#xa;                    &lt;xsl:value-of select=&quot;$get.parameters/tns:tax_code&quot;/>&#xa;                &lt;/tns3:tax_code>&#xa;            &lt;/tns2:cust_input>&#xa;        &lt;/body>&#xa;    &lt;/xsl:template>&#xa;&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                                </tibex:inputBindings>
                                 <bpws:targets>
                                     <bpws:target linkName="OnMessageStartToInvoke"/>
                                 </bpws:targets>
