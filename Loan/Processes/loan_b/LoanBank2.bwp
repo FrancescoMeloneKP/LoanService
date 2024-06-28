@@ -1206,8 +1206,8 @@
                                     gradientEndColor="50431"
                                     gradientStartColor="16777215" xsi:type="bwnotation:BackgroundStyle"/>
                                     <element href="//0/@process/@activity/@activity/@activities.0"/>
-                                    <layoutConstraint x="2"
-                                    xsi:type="notation:Bounds" y="2"/>
+                                    <layoutConstraint x="-155"
+                                    xsi:type="notation:Bounds" y="143"/>
                                     </children>
                                     <children type="4002">
                                     <children type="4017">
@@ -1241,7 +1241,7 @@
                                     gradientEndColor="50431"
                                     gradientStartColor="16777215" xsi:type="bwnotation:BackgroundStyle"/>
                                     <element href="//0/@process/@activity/@activity/@activities.1"/>
-                                    <layoutConstraint x="379"
+                                    <layoutConstraint x="629"
                                     xsi:type="notation:Bounds" y="134"/>
                                     </children>
                                     <children type="4002 bw.xml.renderxml">
@@ -1278,8 +1278,8 @@
                                     <element href="//0/@process/@activity/@activity/@activities.2"/>
                                     <layoutConstraint
                                     height="40" width="40"
-                                    x="128"
-                                    xsi:type="notation:Bounds" y="2"/>
+                                    x="76"
+                                    xsi:type="notation:Bounds" y="143"/>
                                     </children>
                                     <children type="4002 bw.jdbc.JDBCQuery">
                                     <children type="4017">
@@ -1315,8 +1315,8 @@
                                     <element href="//0/@process/@activity/@activity/@activities.3"/>
                                     <layoutConstraint
                                     height="40" width="40"
-                                    x="-11"
-                                    xsi:type="notation:Bounds" y="117"/>
+                                    x="-23"
+                                    xsi:type="notation:Bounds" y="134"/>
                                     </children>
                                     <children type="4002 bw.xml.parsexml">
                                     <children type="4017">
@@ -1352,8 +1352,8 @@
                                     <element href="//0/@process/@activity/@activity/@activities.4"/>
                                     <layoutConstraint
                                     height="40" width="40"
-                                    x="307"
-                                    xsi:type="notation:Bounds" y="241"/>
+                                    x="484"
+                                    xsi:type="notation:Bounds" y="126"/>
                                     </children>
                                     <children type="4002 bw.jms.send">
                                     <children type="4017">
@@ -1389,8 +1389,8 @@
                                     <element href="//0/@process/@activity/@activity/@activities.5"/>
                                     <layoutConstraint
                                     height="40" width="40"
-                                    x="109"
-                                    xsi:type="notation:Bounds" y="161"/>
+                                    x="201"
+                                    xsi:type="notation:Bounds" y="134"/>
                                     </children>
                                     <children type="4002 bw.jms.getmsg">
                                     <children type="4017">
@@ -1426,8 +1426,8 @@
                                     <element href="//0/@process/@activity/@activity/@activities.6"/>
                                     <layoutConstraint
                                     height="40" width="40"
-                                    x="128"
-                                    xsi:type="notation:Bounds" y="258"/>
+                                    x="331"
+                                    xsi:type="notation:Bounds" y="134"/>
                                     </children>
                                     <styles xsi:type="notation:DrawerStyle"/>
                                     <styles xsi:type="notation:SortingStyle"/>
@@ -1442,7 +1442,7 @@
                                     <styles xsi:type="bwnotation:ResizingStyle"/>
                                     <element href="//0/@process/@activity/@activity"/>
                                     <layoutConstraint height="384"
-                                    width="515" xsi:type="notation:Bounds"/>
+                                    width="893" xsi:type="notation:Bounds"/>
                                 </children>
                                 <styles xsi:type="notation:SortingStyle"/>
                                 <styles xsi:type="notation:FilteringStyle"/>
@@ -1470,21 +1470,10 @@
             </children>
             <styles fontName="Segoe UI" lineColor="0" xsi:type="notation:ShapeStyle"/>
             <element href="//0/@process"/>
-            <layoutConstraint height="460" width="860" xsi:type="notation:Bounds"/>
+            <layoutConstraint height="460" width="1238" xsi:type="notation:Bounds"/>
         </children>
         <styles xsi:type="notation:DiagramStyle"/>
         <element href="//0"/>
-        <edges
-            source="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0"
-            target="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2" type="4006">
-            <children type="6002">
-                <layoutConstraint xsi:type="notation:Location" y="40"/>
-            </children>
-            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
-            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
-            <element href="//0/@process/@activity/@activity/@links/@children.0"/>
-            <bendpoints points="[0, 0, 0, 0]$[0, 0, 0, 0]" xsi:type="notation:RelativeBendpoints"/>
-        </edges>
         <edges
             source="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0"
             target="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.3" type="4006">
@@ -1493,7 +1482,7 @@
             </children>
             <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
             <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
-            <element href="//0/@process/@activity/@activity/@links/@children.1"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.0"/>
             <bendpoints points="[-3, 25, 10, -90]$[-10, 91, 3, -24]" xsi:type="notation:RelativeBendpoints"/>
         </edges>
         <edges
@@ -1504,19 +1493,8 @@
             </children>
             <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
             <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
-            <element href="//0/@process/@activity/@activity/@links/@children.2"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.1"/>
             <bendpoints points="[25, -13, -99, 55]$[100, -55, -24, 13]" xsi:type="notation:RelativeBendpoints"/>
-        </edges>
-        <edges
-            source="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.3"
-            target="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.5" type="4006">
-            <children type="6002">
-                <layoutConstraint xsi:type="notation:Location" y="40"/>
-            </children>
-            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
-            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
-            <element href="//0/@process/@activity/@activity/@links/@children.3"/>
-            <bendpoints points="[25, 9, -95, -35]$[96, 35, -24, -9]" xsi:type="notation:RelativeBendpoints"/>
         </edges>
         <edges
             source="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.5"
@@ -1526,7 +1504,7 @@
             </children>
             <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
             <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
-            <element href="//0/@process/@activity/@activity/@links/@children.4"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.2"/>
             <bendpoints points="[5, 25, -14, -72]$[14, 73, -5, -24]" xsi:type="notation:RelativeBendpoints"/>
         </edges>
         <edges
@@ -1537,7 +1515,7 @@
             </children>
             <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
             <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
-            <element href="//0/@process/@activity/@activity/@links/@children.5"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.3"/>
             <bendpoints points="[25, -2, -154, 15]$[155, -15, -24, 2]" xsi:type="notation:RelativeBendpoints"/>
         </edges>
         <edges
@@ -1548,8 +1526,19 @@
             </children>
             <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
             <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
-            <element href="//0/@process/@activity/@activity/@links/@children.6"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.4"/>
             <bendpoints points="[-3, 25, 16, -134]$[-16, 135, 3, -24]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+        <edges
+            source="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.3"
+            target="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.5"/>
+            <bendpoints points="[22, -24, -50, 56]$[50, -55, -22, 25]" xsi:type="notation:RelativeBendpoints"/>
         </edges>
     </notation:Diagram>
     <tibex:NamespaceRegistry enabled="true">
@@ -1622,13 +1611,12 @@
     <bpws:scope name="scope">
         <bpws:flow name="flow">
             <bpws:links>
-                <bpws:link name="StartToEnd" tibex:linkType="SUCCESS"/>
                 <bpws:link name="StartToJDBCQuery" tibex:linkType="SUCCESS"/>
                 <bpws:link name="ParseXmlToEnd" tibex:linkType="SUCCESS"/>
-                <bpws:link name="JDBCQueryToJMSSendMessage" tibex:linkType="SUCCESS"/>
                 <bpws:link name="JMSSendMessageToGetJMSQueueMessage" tibex:linkType="SUCCESS"/>
                 <bpws:link name="GetJMSQueueMessageToParseXml" tibex:linkType="SUCCESS"/>
                 <bpws:link name="RenderXmlToJMSSendMessage" tibex:linkType="SUCCESS"/>
+                <bpws:link name="JDBCQueryToRenderXml" tibex:linkType="SUCCESS"/>
             </bpws:links>
             <bpws:extensionActivity>
                 <tibex:receiveEvent createInstance="yes"
@@ -1636,8 +1624,9 @@
                     tibex:xpdlId="cc181083-6542-48fc-8973-8226a0de9a52"
                     variable="Start" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
                     <bpws:sources>
-                        <bpws:source linkName="StartToEnd"/>
-                        <bpws:source linkName="StartToJDBCQuery"/>
+                        <bpws:source linkName="StartToJDBCQuery">
+                            <tibex:DesignExpression/>
+                        </bpws:source>
                     </bpws:sources>
                     <tibex:eventSource>
                         <tibex:StartEvent xmlns:tibex="http://www.tibco.com/bpel/2007/extensions"/>
@@ -1676,7 +1665,7 @@
                     name="RenderXml" outputVariable="RenderXml"
                     tibex:xpdlId="90c39a88-a5b5-4964-9c64-b4d2d4fcadef" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
                     <bpws:targets>
-                        <bpws:target linkName="StartToEnd"/>
+                        <bpws:target linkName="JDBCQueryToRenderXml"/>
                     </bpws:targets>
                     <bpws:sources>
                         <bpws:source linkName="RenderXmlToJMSSendMessage"/>
@@ -1713,7 +1702,7 @@
                         <bpws:target linkName="StartToJDBCQuery"/>
                     </bpws:targets>
                     <bpws:sources>
-                        <bpws:source linkName="JDBCQueryToJMSSendMessage"/>
+                        <bpws:source linkName="JDBCQueryToRenderXml"/>
                     </bpws:sources>
                     <tibex:inputBindings>
                         <tibex:inputBinding
@@ -1783,7 +1772,6 @@
                     outputVariable="JMSSendMessage"
                     tibex:xpdlId="7e195b8a-7715-484f-a898-0a25d1bdcea0" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
                     <bpws:targets>
-                        <bpws:target linkName="JDBCQueryToJMSSendMessage"/>
                         <bpws:target linkName="RenderXmlToJMSSendMessage"/>
                     </bpws:targets>
                     <bpws:sources>
