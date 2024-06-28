@@ -8,6 +8,11 @@
     xmlns:ns0="http://www.tibco.com/namespaces/tnt/plugins/parsexml"
     xmlns:ns1="http://tns.tibco.com/bw/palette/internal/activityerror+bw.xml.parsexml"
     xmlns:ns10="http://tns.tibco.com/bw/palette/internal/activityerror+bw.xml.renderxml"
+    xmlns:ns11="http://www.tibco.com/namespaces/tnt/plugins/jms+1ae1d5b4-a6e8-44c5-9d14-47305197a338+input"
+    xmlns:ns12="http://www.tibco.com/namespaces/tnt/plugins/jms"
+    xmlns:ns13="http://tns.tibco.com/bw/palette/internal/activityerror+bw.jms.send"
+    xmlns:ns14="http://www.tibco.com/namespaces/tnt/plugins/jms+02fe9ebd-43db-4d7c-a9ce-899b55919632+output"
+    xmlns:ns15="http://tns.tibco.com/bw/palette/internal/activityerror+bw.jms.getmsg"
     xmlns:ns2="http://www.tibco.com/namespaces/tnt/plugins/jdbc+6d318197-0845-401c-9f9f-2d0679912d98+input"
     xmlns:ns3="http://www.tibco.com/namespaces/tnt/plugins/jdbc+6d318197-0845-401c-9f9f-2d0679912d98+output"
     xmlns:ns4="http://tns.tibco.com/bw/palette/internal/activityerror+bw.jdbc.JDBCQuery"
@@ -29,7 +34,7 @@
         <task name="ParseXml">
             <endingVariables>
                 <variable>ParseXml-input</variable>
-                <variable>RenderXml</variable>
+                <variable>GetJMSQueueMessage</variable>
             </endingVariables>
         </task>
         <task name="JDBCQuery">
@@ -37,17 +42,23 @@
                 <variable>JDBCQuery-input</variable>
             </endingVariables>
         </task>
-        <task name="JMSRequestReply">
-            <endingVariables>
-                <variable>JMSRequestReply-input</variable>
-                <variable>JMSRequestReply</variable>
-                <variable>JDBCQuery</variable>
-            </endingVariables>
-        </task>
         <task name="RenderXml">
             <endingVariables>
                 <variable>RenderXml-input</variable>
                 <variable>Start</variable>
+            </endingVariables>
+        </task>
+        <task name="JMSSendMessage">
+            <endingVariables>
+                <variable>JMSSendMessage-input</variable>
+                <variable>JMSSendMessage</variable>
+                <variable>JDBCQuery</variable>
+                <variable>RenderXml</variable>
+            </endingVariables>
+        </task>
+        <task name="GetJMSQueueMessage">
+            <endingVariables>
+                <variable>GetJMSQueueMessage-input</variable>
             </endingVariables>
         </task>
     </tibex:VariableDescriptor>
@@ -411,376 +422,6 @@
                 </complexContent>
             </complexType>
         </schema>
-        <xsd:schema attributeFormDefault="unqualified"
-            elementFormDefault="qualified"
-            targetNamespace="http://www.tibco.com/namespaces/tnt/plugins/jms+c5de402e-65cb-490b-a1be-344150224826+input"
-            version="0.1"
-            xmlns="http://www.tibco.com/namespaces/tnt/plugins/jms+c5de402e-65cb-490b-a1be-344150224826+input" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-            <xsd:complexType name="ActivityOutput">
-                <xsd:sequence>
-                    <xsd:element name="MessageID" type="xsd:string"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <!-- awagle addition -->
-            <xsd:complexType name="JMSTransmitInputSchemaType">
-                <xsd:sequence>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="destination" type="xsd:string"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="replyTo" type="xsd:string"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="JMSExpiration" type="xsd:int"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="JMSPriority" type="xsd:int"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="JMSDeliveryMode" type="xsd:string"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="JMSCorrelationID" type="xsd:string"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="JMSType" type="xsd:string"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="JMSProperties" type="JmsTransmitProperties"/>
-                    <xsd:element form="unqualified" minOccurs="1"
-                        name="Body" type="xsd:string"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="DynamicProperties" type="JmsDynamicProperties"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="requestTimeout" type="xsd:integer"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="JmsTransmitProperties">
-                <xsd:sequence>
-                    <!-- these two are actually useful and used (but group seq can't be set) -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXGroupID" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXGroupSeq" type="xsd:int"/>
-                    <!-- tibco specific
-      <xsd:element name="JMS_TIBCO_MSG_EXT" type="xsd:boolean" minOccurs="0" maxOccurs="1" />
-      <xsd:element name="JMS_TIBCO_COMPRESS" type="xsd:boolean" minOccurs="0" maxOccurs="1" />
-      <! these two are TNT-specific, supporting the XML decoding
-      <xsd:element name="TIBCO_TNT_schema_reference" type="xsd:string" minOccurs="0" maxOccurs="1" />
-      <xsd:element name="TIBCO_TNT_root_element" type="xsd:string" minOccurs="0" maxOccurs="1" />
-      -->
-                    <!-- all other properties, vendor or application defined, in a standard format -->
-                    <!-- <xsd:element name="JMS_VendorDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
-                    <!-- <xsd:element name="JMS_ApplicationDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="JmsHeaders">
-                <xsd:sequence>
-                    <!-- NOTE: a destination is actually an object.  We are able to treat is as a string
-           because the other items that define a destination (topic vs queue, server/connection)
-           are already defined in the config element.  We do the same for the ReplyTo -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSDestination" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSReplyTo" type="xsd:string"/>
-                    <!-- PROBLEM: this is actually an int, but we're representing it here as a string enumeration,
-  meaning that the app must then translate from the constants in JMS to the 'constants' in the enumeration -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSDeliveryMode" type="JmsDeliveryMode"/>
-                    <!-- actually an int ... -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSMessageID" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSTimestamp" type="xsd:long"/>
-                    <!-- Java timestamp, millis from era -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSExpiration" type="xsd:long"/>
-                    <!-- Java timestamp, millis from era -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSRedelivered" type="xsd:boolean"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSPriority" type="JmsPriority"/>
-                    <!-- PROBLEM: correlation id can also be retrieved as a stream of bytes -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSCorrelationID" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSType" type="xsd:string"/>
-                    <!-- <xsd:element name="EventSource" type="xsd:string" minOccurs="0" maxOccurs="1" /> -->
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="JmsProperties">
-                <xsd:sequence>
-                    <!-- most of these are not really accessible, easily, but appear on incoming messages -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXUserID" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXAppID" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXProducerTXID" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXConsumerTXID" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXRcvTimestamp" type="xsd:long"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXDeliveryCount" type="xsd:int"/>
-                    <!-- these two are actually useful and used (but group seq can't be set) -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXGroupID" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXGroupSeq" type="xsd:int"/>
-                    <!-- tibco specific -->
-                    <!--<xsd:element name="JMS_TIBCO_MSG_EXT" type="xsd:boolean" minOccurs="0" maxOccurs="1" /> -->
-                    <!--<xsd:element name="JMS_TIBCO_COMPRESS" type="xsd:boolean" minOccurs="0" maxOccurs="1" /> -->
-                    <!-- these two are TNT-specific, supporting the XML decoding -->
-                    <!--<xsd:element name="TIBCO_TNT_schema_reference" type="xsd:string" minOccurs="0" maxOccurs="1" /> -->
-                    <!--<xsd:element name="TIBCO_TNT_root_element" type="xsd:string" minOccurs="0" maxOccurs="1" /> -->
-                    <!-- all other properties, vendor or application defined, in a standard format -->
-                    <!-- <xsd:element name="JMS_VendorDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
-                    <!-- <xsd:element name="JMS_ApplicationDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="JmsDynamicProperties">
-                <xsd:sequence>
-                    <xsd:element maxOccurs="unbounded" minOccurs="0"
-                        name="property" type="JmsDynamicProperty"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="JmsDynamicProperty">
-                <xsd:sequence>
-                    <xsd:element maxOccurs="1" minOccurs="1" name="name"
-                        nillable="true" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="1"
-                        name="value" nillable="true" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0" name="type"
-                        nillable="true" type="xsd:string"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="JmsMessage">
-                <xsd:sequence>
-                    <xsd:element maxOccurs="1" minOccurs="1"
-                        name="MessageHeaders" type="JmsHeaders"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="MessageProperties" type="JmsProperties"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="JMSReceiveSchema">
-                <xsd:sequence>
-                    <xsd:element form="unqualified" name="JMSHeaders" type="JmsHeaders"/>
-                    <xsd:element form="unqualified" name="JMSProperties" type="JmsProperties"/>
-                    <!-- <xsd:element name="OtherProperties" form="unqualified" type="tns:OtherProperties" minOccurs="0"/>-->
-                    <xsd:element form="unqualified" name="Body" type="xsd:string"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="DynamicProperties" type="JmsDynamicProperties"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:element name="ActivityOutput" type="JMSReceiveSchema"/>
-            <!-- enumerations for various constants -->
-            <xsd:simpleType name="JmsDeliveryMode">
-                <xsd:restriction base="xsd:string">
-                    <xsd:enumeration value="PERSISTENT"/>
-                    <xsd:enumeration value="NON_PERSISTENT"/>
-                    <xsd:enumeration value="RELIABLE_DELIVERY"/>
-                    <!-- Tibco Enterprise for JMS defined (TibjmsxConst) -->
-                    <!-- <xsd:enumeration value="NO_ACKNOWLEDGE" /> -->
-                </xsd:restriction>
-            </xsd:simpleType>
-            <xsd:simpleType name="JmsPriority">
-                <xsd:restriction base="xsd:int">
-                    <xsd:minInclusive value="0"/>
-                    <xsd:maxInclusive value="9"/>
-                </xsd:restriction>
-            </xsd:simpleType>
-            <xsd:element name="aEmptyOutputClass" type="ActivityOutput"/>
-            <xsd:element name="ActivityInput" type="JMSTransmitInputSchemaType"/>
-            <xsd:complexType name="JMSQueueGetMessageInputSchema">
-                <xsd:sequence>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="destinationQueue" type="xsd:string"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="timeout" type="xsd:long"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="selector" type="xsd:string"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:element name="GetJMSActivityInput" type="JMSQueueGetMessageInputSchema"/>
-        </xsd:schema>
-        <xsd:schema attributeFormDefault="unqualified"
-            elementFormDefault="qualified"
-            targetNamespace="http://www.tibco.com/namespaces/tnt/plugins/jms+c5de402e-65cb-490b-a1be-344150224826+output"
-            version="0.1"
-            xmlns="http://www.tibco.com/namespaces/tnt/plugins/jms+c5de402e-65cb-490b-a1be-344150224826+output" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-            <xsd:complexType name="ActivityOutput">
-                <xsd:sequence>
-                    <xsd:element name="MessageID" type="xsd:string"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <!-- awagle addition -->
-            <xsd:complexType name="JMSTransmitInputSchemaType">
-                <xsd:sequence>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="destination" type="xsd:string"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="replyTo" type="xsd:string"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="JMSExpiration" type="xsd:int"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="JMSPriority" type="xsd:int"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="JMSDeliveryMode" type="xsd:string"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="JMSCorrelationID" type="xsd:string"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="JMSType" type="xsd:string"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="JMSProperties" type="JmsTransmitProperties"/>
-                    <xsd:element form="unqualified" minOccurs="1"
-                        name="Body" type="xsd:string"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="DynamicProperties" type="JmsDynamicProperties"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="JmsTransmitProperties">
-                <xsd:sequence>
-                    <!-- these two are actually useful and used (but group seq can't be set) -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXGroupID" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXGroupSeq" type="xsd:int"/>
-                    <!-- tibco specific
-      <xsd:element name="JMS_TIBCO_MSG_EXT" type="xsd:boolean" minOccurs="0" maxOccurs="1" />
-      <xsd:element name="JMS_TIBCO_COMPRESS" type="xsd:boolean" minOccurs="0" maxOccurs="1" />
-      <! these two are TNT-specific, supporting the XML decoding
-      <xsd:element name="TIBCO_TNT_schema_reference" type="xsd:string" minOccurs="0" maxOccurs="1" />
-      <xsd:element name="TIBCO_TNT_root_element" type="xsd:string" minOccurs="0" maxOccurs="1" />
-      -->
-                    <!-- all other properties, vendor or application defined, in a standard format -->
-                    <!-- <xsd:element name="JMS_VendorDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
-                    <!-- <xsd:element name="JMS_ApplicationDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="JmsHeaders">
-                <xsd:sequence>
-                    <!-- NOTE: a destination is actually an object.  We are able to treat is as a string
-           because the other items that define a destination (topic vs queue, server/connection)
-           are already defined in the config element.  We do the same for the ReplyTo -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSDestination" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSReplyTo" type="xsd:string"/>
-                    <!-- PROBLEM: this is actually an int, but we're representing it here as a string enumeration,
-  meaning that the app must then translate from the constants in JMS to the 'constants' in the enumeration -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSDeliveryMode" type="JmsDeliveryMode"/>
-                    <!-- actually an int ... -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSMessageID" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSTimestamp" type="xsd:long"/>
-                    <!-- Java timestamp, millis from era -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSExpiration" type="xsd:long"/>
-                    <!-- Java timestamp, millis from era -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSRedelivered" type="xsd:boolean"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSPriority" type="JmsPriority"/>
-                    <!-- PROBLEM: correlation id can also be retrieved as a stream of bytes -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSCorrelationID" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSType" type="xsd:string"/>
-                    <!-- <xsd:element name="EventSource" type="xsd:string" minOccurs="0" maxOccurs="1" /> -->
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="JmsProperties">
-                <xsd:sequence>
-                    <!-- most of these are not really accessible, easily, but appear on incoming messages -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXUserID" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXAppID" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXProducerTXID" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXConsumerTXID" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXRcvTimestamp" type="xsd:long"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXDeliveryCount" type="xsd:int"/>
-                    <!-- these two are actually useful and used (but group seq can't be set) -->
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXGroupID" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="JMSXGroupSeq" type="xsd:int"/>
-                    <!-- tibco specific -->
-                    <!--<xsd:element name="JMS_TIBCO_MSG_EXT" type="xsd:boolean" minOccurs="0" maxOccurs="1" /> -->
-                    <!--<xsd:element name="JMS_TIBCO_COMPRESS" type="xsd:boolean" minOccurs="0" maxOccurs="1" /> -->
-                    <!-- these two are TNT-specific, supporting the XML decoding -->
-                    <!--<xsd:element name="TIBCO_TNT_schema_reference" type="xsd:string" minOccurs="0" maxOccurs="1" /> -->
-                    <!--<xsd:element name="TIBCO_TNT_root_element" type="xsd:string" minOccurs="0" maxOccurs="1" /> -->
-                    <!-- all other properties, vendor or application defined, in a standard format -->
-                    <!-- <xsd:element name="JMS_VendorDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
-                    <!-- <xsd:element name="JMS_ApplicationDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="JmsDynamicProperties">
-                <xsd:sequence>
-                    <xsd:element maxOccurs="unbounded" minOccurs="0"
-                        name="property" type="JmsDynamicProperty"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="JmsDynamicProperty">
-                <xsd:sequence>
-                    <xsd:element maxOccurs="1" minOccurs="1" name="name"
-                        nillable="true" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="1"
-                        name="value" nillable="true" type="xsd:string"/>
-                    <xsd:element maxOccurs="1" minOccurs="0" name="type"
-                        nillable="true" type="xsd:string"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="JmsMessage">
-                <xsd:sequence>
-                    <xsd:element maxOccurs="1" minOccurs="1"
-                        name="MessageHeaders" type="JmsHeaders"/>
-                    <xsd:element maxOccurs="1" minOccurs="0"
-                        name="MessageProperties" type="JmsProperties"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="JMSReceiveSchema">
-                <xsd:sequence>
-                    <xsd:element form="unqualified" name="JMSHeaders" type="JmsHeaders"/>
-                    <xsd:element form="unqualified" name="JMSProperties" type="JmsProperties"/>
-                    <!-- <xsd:element name="OtherProperties" form="unqualified" type="tns:OtherProperties" minOccurs="0"/>-->
-                    <xsd:element form="unqualified" name="Body" type="xsd:string"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="DynamicProperties" type="JmsDynamicProperties"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:element name="ActivityOutput" type="JMSReceiveSchema"/>
-            <!-- enumerations for various constants -->
-            <xsd:simpleType name="JmsDeliveryMode">
-                <xsd:restriction base="xsd:string">
-                    <xsd:enumeration value="PERSISTENT"/>
-                    <xsd:enumeration value="NON_PERSISTENT"/>
-                    <xsd:enumeration value="RELIABLE_DELIVERY"/>
-                    <!-- Tibco Enterprise for JMS defined (TibjmsxConst) -->
-                    <!-- <xsd:enumeration value="NO_ACKNOWLEDGE" /> -->
-                </xsd:restriction>
-            </xsd:simpleType>
-            <xsd:simpleType name="JmsPriority">
-                <xsd:restriction base="xsd:int">
-                    <xsd:minInclusive value="0"/>
-                    <xsd:maxInclusive value="9"/>
-                </xsd:restriction>
-            </xsd:simpleType>
-            <xsd:element name="aEmptyOutputClass" type="ActivityOutput"/>
-            <xsd:element name="ActivityInput" type="JMSTransmitInputSchemaType"/>
-            <xsd:complexType name="JMSQueueGetMessageInputSchema">
-                <xsd:sequence>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="destinationQueue" type="xsd:string"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="timeout" type="xsd:long"/>
-                    <xsd:element form="unqualified" minOccurs="0"
-                        name="selector" type="xsd:string"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:element name="GetJMSActivityInput" type="JMSQueueGetMessageInputSchema"/>
-        </xsd:schema>
         <schema elementFormDefault="unqualified"
             targetNamespace="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions"
             version="0.1" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions">
@@ -900,29 +541,6 @@
             </complexType>
         </schema>
         <schema elementFormDefault="unqualified"
-            targetNamespace="http://tns.tibco.com/bw/palette/internal/activityerror+bw.jms.requestreply"
-            xmlns="http://www.w3.org/2001/XMLSchema"
-            xmlns:Q1="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions"
-            xmlns:Q2="http://schemas.tibco.com/bw/pe/plugin/5.0/exceptions" xmlns:tns="http://tns.tibco.com/bw/palette/internal/activityerror+bw.jms.requestreply">
-            <import namespace="http://schemas.tibco.com/bw/pe/plugin/5.0/exceptions"/>
-            <import namespace="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions"/>
-            <import namespace="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions"/>
-            <import namespace="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions"/>
-            <import namespace="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions"/>
-            <import namespace="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions"/>
-            <element name="ActivityErrorData" type="tns:ActivityErrorDataType"/>
-            <complexType name="ActivityErrorDataType">
-                <choice>
-                    <element maxOccurs="1" minOccurs="0" ref="Q1:JMSInvalidInputException"/>
-                    <element maxOccurs="1" minOccurs="0" ref="Q1:JMSMessageCreateException"/>
-                    <element maxOccurs="1" minOccurs="0" ref="Q1:JMSSessionCreateException"/>
-                    <element maxOccurs="1" minOccurs="0" ref="Q1:JMSSendException"/>
-                    <element maxOccurs="1" minOccurs="0" ref="Q1:JMSReceiveException"/>
-                    <element maxOccurs="1" minOccurs="0" ref="Q2:ActivityTimedOutException"/>
-                </choice>
-            </complexType>
-        </schema>
-        <schema elementFormDefault="unqualified"
             targetNamespace="http://tns.tibco.com/bw/palette/internal/activityerror+bw.xml.renderxml"
             xmlns="http://www.w3.org/2001/XMLSchema"
             xmlns:Q1="http://schemas.tibco.com/bw/plugins/xml/5.0/xmlExceptions" xmlns:tns="http://tns.tibco.com/bw/palette/internal/activityerror+bw.xml.renderxml">
@@ -935,6 +553,595 @@
                     <element maxOccurs="1" minOccurs="0" ref="Q1:XMLRenderException"/>
                     <element maxOccurs="1" minOccurs="0" ref="Q1:UnsupportedEncodingException"/>
                     <element maxOccurs="1" minOccurs="0" ref="Q1:MissingByteCountException"/>
+                </choice>
+            </complexType>
+        </schema>
+        <xsd:schema attributeFormDefault="unqualified"
+            elementFormDefault="qualified"
+            targetNamespace="http://www.tibco.com/namespaces/tnt/plugins/jms+1ae1d5b4-a6e8-44c5-9d14-47305197a338+input"
+            version="0.1"
+            xmlns="http://www.tibco.com/namespaces/tnt/plugins/jms+1ae1d5b4-a6e8-44c5-9d14-47305197a338+input" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:complexType name="ActivityOutput">
+                <xsd:sequence>
+                    <xsd:element name="MessageID" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <!-- awagle addition -->
+            <xsd:complexType name="JMSTransmitInputSchemaType">
+                <xsd:sequence>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="destination" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="replyTo" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSExpiration" type="xsd:int"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSPriority" type="xsd:int"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSDeliveryMode" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSCorrelationID" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSType" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSProperties" type="JmsTransmitProperties"/>
+                    <xsd:element form="unqualified" minOccurs="1"
+                        name="Body" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="DynamicProperties" type="JmsDynamicProperties"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsTransmitProperties">
+                <xsd:sequence>
+                    <!-- these two are actually useful and used (but group seq can't be set) -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXGroupID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXGroupSeq" type="xsd:int"/>
+                    <!-- tibco specific
+      <xsd:element name="JMS_TIBCO_MSG_EXT" type="xsd:boolean" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="JMS_TIBCO_COMPRESS" type="xsd:boolean" minOccurs="0" maxOccurs="1" />
+      <! these two are TNT-specific, supporting the XML decoding
+      <xsd:element name="TIBCO_TNT_schema_reference" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="TIBCO_TNT_root_element" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      -->
+                    <!-- all other properties, vendor or application defined, in a standard format -->
+                    <!-- <xsd:element name="JMS_VendorDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
+                    <!-- <xsd:element name="JMS_ApplicationDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsHeaders">
+                <xsd:sequence>
+                    <!-- NOTE: a destination is actually an object.  We are able to treat is as a string
+           because the other items that define a destination (topic vs queue, server/connection)
+           are already defined in the config element.  We do the same for the ReplyTo -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSDestination" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSReplyTo" type="xsd:string"/>
+                    <!-- PROBLEM: this is actually an int, but we're representing it here as a string enumeration,
+  meaning that the app must then translate from the constants in JMS to the 'constants' in the enumeration -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSDeliveryMode" type="JmsDeliveryMode"/>
+                    <!-- actually an int ... -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSMessageID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSTimestamp" type="xsd:long"/>
+                    <!-- Java timestamp, millis from era -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSExpiration" type="xsd:long"/>
+                    <!-- Java timestamp, millis from era -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSRedelivered" type="xsd:boolean"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSPriority" type="JmsPriority"/>
+                    <!-- PROBLEM: correlation id can also be retrieved as a stream of bytes -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSCorrelationID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSType" type="xsd:string"/>
+                    <!-- <xsd:element name="EventSource" type="xsd:string" minOccurs="0" maxOccurs="1" /> -->
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsProperties">
+                <xsd:sequence>
+                    <!-- most of these are not really accessible, easily, but appear on incoming messages -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXUserID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXAppID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXProducerTXID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXConsumerTXID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXRcvTimestamp" type="xsd:long"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXDeliveryCount" type="xsd:int"/>
+                    <!-- these two are actually useful and used (but group seq can't be set) -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXGroupID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXGroupSeq" type="xsd:int"/>
+                    <!-- tibco specific -->
+                    <!--<xsd:element name="JMS_TIBCO_MSG_EXT" type="xsd:boolean" minOccurs="0" maxOccurs="1" /> -->
+                    <!--<xsd:element name="JMS_TIBCO_COMPRESS" type="xsd:boolean" minOccurs="0" maxOccurs="1" /> -->
+                    <!-- these two are TNT-specific, supporting the XML decoding -->
+                    <!--<xsd:element name="TIBCO_TNT_schema_reference" type="xsd:string" minOccurs="0" maxOccurs="1" /> -->
+                    <!--<xsd:element name="TIBCO_TNT_root_element" type="xsd:string" minOccurs="0" maxOccurs="1" /> -->
+                    <!-- all other properties, vendor or application defined, in a standard format -->
+                    <!-- <xsd:element name="JMS_VendorDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
+                    <!-- <xsd:element name="JMS_ApplicationDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsDynamicProperties">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0"
+                        name="property" type="JmsDynamicProperty"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsDynamicProperty">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="1" minOccurs="1" name="name"
+                        nillable="true" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="1"
+                        name="value" nillable="true" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="type"
+                        nillable="true" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsMessage">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="1" minOccurs="1"
+                        name="MessageHeaders" type="JmsHeaders"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="MessageProperties" type="JmsProperties"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JMSReceiveSchema">
+                <xsd:sequence>
+                    <xsd:element form="unqualified" name="JMSHeaders" type="JmsHeaders"/>
+                    <xsd:element form="unqualified" name="JMSProperties" type="JmsProperties"/>
+                    <!-- <xsd:element name="OtherProperties" form="unqualified" type="tns:OtherProperties" minOccurs="0"/>-->
+                    <xsd:element form="unqualified" name="Body" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="DynamicProperties" type="JmsDynamicProperties"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="ActivityOutput" type="JMSReceiveSchema"/>
+            <!-- enumerations for various constants -->
+            <xsd:simpleType name="JmsDeliveryMode">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="PERSISTENT"/>
+                    <xsd:enumeration value="NON_PERSISTENT"/>
+                    <xsd:enumeration value="RELIABLE_DELIVERY"/>
+                    <!-- Tibco Enterprise for JMS defined (TibjmsxConst) -->
+                    <!-- <xsd:enumeration value="NO_ACKNOWLEDGE" /> -->
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="JmsPriority">
+                <xsd:restriction base="xsd:int">
+                    <xsd:minInclusive value="0"/>
+                    <xsd:maxInclusive value="9"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:element name="aEmptyOutputClass" type="ActivityOutput"/>
+            <xsd:element name="ActivityInput" type="JMSTransmitInputSchemaType"/>
+            <xsd:complexType name="JMSQueueGetMessageInputSchema">
+                <xsd:sequence>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="destinationQueue" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="timeout" type="xsd:long"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="selector" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="GetJMSActivityInput" type="JMSQueueGetMessageInputSchema"/>
+        </xsd:schema>
+        <xsd:schema attributeFormDefault="unqualified"
+            elementFormDefault="qualified"
+            targetNamespace="http://www.tibco.com/namespaces/tnt/plugins/jms"
+            version="0.1"
+            xmlns="http://www.tibco.com/namespaces/tnt/plugins/jms" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:complexType name="ActivityOutput">
+                <xsd:sequence>
+                    <xsd:element name="MessageID" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <!-- awagle addition -->
+            <xsd:complexType name="JMSTransmitInputSchemaType">
+                <xsd:sequence>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="destination" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="replyTo" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSExpiration" type="xsd:int"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSPriority" type="xsd:int"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSDeliveryMode" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSCorrelationID" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSType" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSProperties" type="JmsTransmitProperties"/>
+                    <xsd:element form="unqualified" minOccurs="1"
+                        name="Body" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="DynamicProperties" type="JmsDynamicProperties"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsTransmitProperties">
+                <xsd:sequence>
+                    <!-- these two are actually useful and used (but group seq can't be set) -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXGroupID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXGroupSeq" type="xsd:int"/>
+                    <!-- tibco specific
+      <xsd:element name="JMS_TIBCO_MSG_EXT" type="xsd:boolean" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="JMS_TIBCO_COMPRESS" type="xsd:boolean" minOccurs="0" maxOccurs="1" />
+      <! these two are TNT-specific, supporting the XML decoding
+      <xsd:element name="TIBCO_TNT_schema_reference" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="TIBCO_TNT_root_element" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      -->
+                    <!-- all other properties, vendor or application defined, in a standard format -->
+                    <!-- <xsd:element name="JMS_VendorDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
+                    <!-- <xsd:element name="JMS_ApplicationDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsHeaders">
+                <xsd:sequence>
+                    <!-- NOTE: a destination is actually an object.  We are able to treat is as a string
+           because the other items that define a destination (topic vs queue, server/connection)
+           are already defined in the config element.  We do the same for the ReplyTo -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSDestination" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSReplyTo" type="xsd:string"/>
+                    <!-- PROBLEM: this is actually an int, but we're representing it here as a string enumeration,
+  meaning that the app must then translate from the constants in JMS to the 'constants' in the enumeration -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSDeliveryMode" type="JmsDeliveryMode"/>
+                    <!-- actually an int ... -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSMessageID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSTimestamp" type="xsd:long"/>
+                    <!-- Java timestamp, millis from era -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSExpiration" type="xsd:long"/>
+                    <!-- Java timestamp, millis from era -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSRedelivered" type="xsd:boolean"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSPriority" type="JmsPriority"/>
+                    <!-- PROBLEM: correlation id can also be retrieved as a stream of bytes -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSCorrelationID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSType" type="xsd:string"/>
+                    <!-- <xsd:element name="EventSource" type="xsd:string" minOccurs="0" maxOccurs="1" /> -->
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsProperties">
+                <xsd:sequence>
+                    <!-- most of these are not really accessible, easily, but appear on incoming messages -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXUserID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXAppID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXProducerTXID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXConsumerTXID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXRcvTimestamp" type="xsd:long"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXDeliveryCount" type="xsd:int"/>
+                    <!-- these two are actually useful and used (but group seq can't be set) -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXGroupID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXGroupSeq" type="xsd:int"/>
+                    <!-- tibco specific -->
+                    <!--<xsd:element name="JMS_TIBCO_MSG_EXT" type="xsd:boolean" minOccurs="0" maxOccurs="1" /> -->
+                    <!--<xsd:element name="JMS_TIBCO_COMPRESS" type="xsd:boolean" minOccurs="0" maxOccurs="1" /> -->
+                    <!-- these two are TNT-specific, supporting the XML decoding -->
+                    <!--<xsd:element name="TIBCO_TNT_schema_reference" type="xsd:string" minOccurs="0" maxOccurs="1" /> -->
+                    <!--<xsd:element name="TIBCO_TNT_root_element" type="xsd:string" minOccurs="0" maxOccurs="1" /> -->
+                    <!-- all other properties, vendor or application defined, in a standard format -->
+                    <!-- <xsd:element name="JMS_VendorDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
+                    <!-- <xsd:element name="JMS_ApplicationDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsDynamicProperties">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0"
+                        name="property" type="JmsDynamicProperty"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsDynamicProperty">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="1" minOccurs="1" name="name"
+                        nillable="true" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="1"
+                        name="value" nillable="true" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="type"
+                        nillable="true" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsMessage">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="1" minOccurs="1"
+                        name="MessageHeaders" type="JmsHeaders"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="MessageProperties" type="JmsProperties"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JMSReceiveSchema">
+                <xsd:sequence>
+                    <xsd:element form="unqualified" name="JMSHeaders" type="JmsHeaders"/>
+                    <xsd:element form="unqualified" name="JMSProperties" type="JmsProperties"/>
+                    <!-- <xsd:element name="OtherProperties" form="unqualified" type="tns:OtherProperties" minOccurs="0"/>-->
+                    <xsd:element form="unqualified" name="Body" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="DynamicProperties" type="JmsDynamicProperties"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="ActivityOutput" type="JMSReceiveSchema"/>
+            <!-- enumerations for various constants -->
+            <xsd:simpleType name="JmsDeliveryMode">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="PERSISTENT"/>
+                    <xsd:enumeration value="NON_PERSISTENT"/>
+                    <xsd:enumeration value="RELIABLE_DELIVERY"/>
+                    <!-- Tibco Enterprise for JMS defined (TibjmsxConst) -->
+                    <!-- <xsd:enumeration value="NO_ACKNOWLEDGE" /> -->
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="JmsPriority">
+                <xsd:restriction base="xsd:int">
+                    <xsd:minInclusive value="0"/>
+                    <xsd:maxInclusive value="9"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:element name="aEmptyOutputClass" type="ActivityOutput"/>
+            <xsd:element name="ActivityInput" type="JMSTransmitInputSchemaType"/>
+            <xsd:complexType name="JMSQueueGetMessageInputSchema">
+                <xsd:sequence>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="destinationQueue" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="timeout" type="xsd:long"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="selector" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="GetJMSActivityInput" type="JMSQueueGetMessageInputSchema"/>
+        </xsd:schema>
+        <xsd:schema attributeFormDefault="unqualified"
+            elementFormDefault="qualified"
+            targetNamespace="http://www.tibco.com/namespaces/tnt/plugins/jms+02fe9ebd-43db-4d7c-a9ce-899b55919632+output"
+            version="0.1"
+            xmlns="http://www.tibco.com/namespaces/tnt/plugins/jms+02fe9ebd-43db-4d7c-a9ce-899b55919632+output" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:complexType name="ActivityOutput">
+                <xsd:sequence>
+                    <xsd:element name="MessageID" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <!-- awagle addition -->
+            <xsd:complexType name="JMSTransmitInputSchemaType">
+                <xsd:sequence>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="destination" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="replyTo" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSExpiration" type="xsd:int"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSPriority" type="xsd:int"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSDeliveryMode" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSCorrelationID" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSType" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="JMSProperties" type="JmsTransmitProperties"/>
+                    <xsd:element form="unqualified" minOccurs="1"
+                        name="Body" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="DynamicProperties" type="JmsDynamicProperties"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsTransmitProperties">
+                <xsd:sequence>
+                    <!-- these two are actually useful and used (but group seq can't be set) -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXGroupID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXGroupSeq" type="xsd:int"/>
+                    <!-- tibco specific
+      <xsd:element name="JMS_TIBCO_MSG_EXT" type="xsd:boolean" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="JMS_TIBCO_COMPRESS" type="xsd:boolean" minOccurs="0" maxOccurs="1" />
+      <! these two are TNT-specific, supporting the XML decoding
+      <xsd:element name="TIBCO_TNT_schema_reference" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      <xsd:element name="TIBCO_TNT_root_element" type="xsd:string" minOccurs="0" maxOccurs="1" />
+      -->
+                    <!-- all other properties, vendor or application defined, in a standard format -->
+                    <!-- <xsd:element name="JMS_VendorDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
+                    <!-- <xsd:element name="JMS_ApplicationDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsHeaders">
+                <xsd:sequence>
+                    <!-- NOTE: a destination is actually an object.  We are able to treat is as a string
+           because the other items that define a destination (topic vs queue, server/connection)
+           are already defined in the config element.  We do the same for the ReplyTo -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSDestination" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSReplyTo" type="xsd:string"/>
+                    <!-- PROBLEM: this is actually an int, but we're representing it here as a string enumeration,
+  meaning that the app must then translate from the constants in JMS to the 'constants' in the enumeration -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSDeliveryMode" type="JmsDeliveryMode"/>
+                    <!-- actually an int ... -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSMessageID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSTimestamp" type="xsd:long"/>
+                    <!-- Java timestamp, millis from era -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSExpiration" type="xsd:long"/>
+                    <!-- Java timestamp, millis from era -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSRedelivered" type="xsd:boolean"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSPriority" type="JmsPriority"/>
+                    <!-- PROBLEM: correlation id can also be retrieved as a stream of bytes -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSCorrelationID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSType" type="xsd:string"/>
+                    <!-- <xsd:element name="EventSource" type="xsd:string" minOccurs="0" maxOccurs="1" /> -->
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsProperties">
+                <xsd:sequence>
+                    <!-- most of these are not really accessible, easily, but appear on incoming messages -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXUserID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXAppID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXProducerTXID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXConsumerTXID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXRcvTimestamp" type="xsd:long"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXDeliveryCount" type="xsd:int"/>
+                    <!-- these two are actually useful and used (but group seq can't be set) -->
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXGroupID" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="JMSXGroupSeq" type="xsd:int"/>
+                    <!-- tibco specific -->
+                    <!--<xsd:element name="JMS_TIBCO_MSG_EXT" type="xsd:boolean" minOccurs="0" maxOccurs="1" /> -->
+                    <!--<xsd:element name="JMS_TIBCO_COMPRESS" type="xsd:boolean" minOccurs="0" maxOccurs="1" /> -->
+                    <!-- these two are TNT-specific, supporting the XML decoding -->
+                    <!--<xsd:element name="TIBCO_TNT_schema_reference" type="xsd:string" minOccurs="0" maxOccurs="1" /> -->
+                    <!--<xsd:element name="TIBCO_TNT_root_element" type="xsd:string" minOccurs="0" maxOccurs="1" /> -->
+                    <!-- all other properties, vendor or application defined, in a standard format -->
+                    <!-- <xsd:element name="JMS_VendorDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
+                    <!-- <xsd:element name="JMS_ApplicationDefined" type="typed-name-value-pair" minOccurs="0" maxOccurs="unbounded" />  -->
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsDynamicProperties">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0"
+                        name="property" type="JmsDynamicProperty"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsDynamicProperty">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="1" minOccurs="1" name="name"
+                        nillable="true" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="1"
+                        name="value" nillable="true" type="xsd:string"/>
+                    <xsd:element maxOccurs="1" minOccurs="0" name="type"
+                        nillable="true" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JmsMessage">
+                <xsd:sequence>
+                    <xsd:element maxOccurs="1" minOccurs="1"
+                        name="MessageHeaders" type="JmsHeaders"/>
+                    <xsd:element maxOccurs="1" minOccurs="0"
+                        name="MessageProperties" type="JmsProperties"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="JMSReceiveSchema">
+                <xsd:sequence>
+                    <xsd:element form="unqualified" name="JMSHeaders" type="JmsHeaders"/>
+                    <xsd:element form="unqualified" name="JMSProperties" type="JmsProperties"/>
+                    <!-- <xsd:element name="OtherProperties" form="unqualified" type="tns:OtherProperties" minOccurs="0"/>-->
+                    <xsd:element form="unqualified" name="Body" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="DynamicProperties" type="JmsDynamicProperties"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="ActivityOutput" type="JMSReceiveSchema"/>
+            <!-- enumerations for various constants -->
+            <xsd:simpleType name="JmsDeliveryMode">
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="PERSISTENT"/>
+                    <xsd:enumeration value="NON_PERSISTENT"/>
+                    <xsd:enumeration value="RELIABLE_DELIVERY"/>
+                    <!-- Tibco Enterprise for JMS defined (TibjmsxConst) -->
+                    <!-- <xsd:enumeration value="NO_ACKNOWLEDGE" /> -->
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType name="JmsPriority">
+                <xsd:restriction base="xsd:int">
+                    <xsd:minInclusive value="0"/>
+                    <xsd:maxInclusive value="9"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:element name="aEmptyOutputClass" type="ActivityOutput"/>
+            <xsd:element name="ActivityInput" type="JMSTransmitInputSchemaType"/>
+            <xsd:complexType name="JMSQueueGetMessageInputSchema">
+                <xsd:sequence>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="destinationQueue" type="xsd:string"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="timeout" type="xsd:long"/>
+                    <xsd:element form="unqualified" minOccurs="0"
+                        name="selector" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="GetJMSActivityInput" type="JMSQueueGetMessageInputSchema"/>
+        </xsd:schema>
+        <schema elementFormDefault="unqualified"
+            targetNamespace="http://tns.tibco.com/bw/palette/internal/activityerror+bw.jms.send"
+            xmlns="http://www.w3.org/2001/XMLSchema"
+            xmlns:Q1="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions" xmlns:tns="http://tns.tibco.com/bw/palette/internal/activityerror+bw.jms.send">
+            <import namespace="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions"/>
+            <import namespace="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions"/>
+            <import namespace="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions"/>
+            <import namespace="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions"/>
+            <element name="ActivityErrorData" type="tns:ActivityErrorDataType"/>
+            <complexType name="ActivityErrorDataType">
+                <choice>
+                    <element maxOccurs="1" minOccurs="0" ref="Q1:JMSInvalidInputException"/>
+                    <element maxOccurs="1" minOccurs="0" ref="Q1:JMSMessageCreateException"/>
+                    <element maxOccurs="1" minOccurs="0" ref="Q1:JMSSessionCreateException"/>
+                    <element maxOccurs="1" minOccurs="0" ref="Q1:JMSSendException"/>
+                </choice>
+            </complexType>
+        </schema>
+        <schema elementFormDefault="unqualified"
+            targetNamespace="http://tns.tibco.com/bw/palette/internal/activityerror+bw.jms.getmsg"
+            xmlns="http://www.w3.org/2001/XMLSchema"
+            xmlns:Q1="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions"
+            xmlns:Q2="http://schemas.tibco.com/bw/pe/plugin/5.0/exceptions" xmlns:tns="http://tns.tibco.com/bw/palette/internal/activityerror+bw.jms.getmsg">
+            <import namespace="http://schemas.tibco.com/bw/pe/plugin/5.0/exceptions"/>
+            <import namespace="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions"/>
+            <import namespace="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions"/>
+            <import namespace="http://schemas.tibco.com/bw/plugins/jms/5.0/jmsExceptions"/>
+            <element name="ActivityErrorData" type="tns:ActivityErrorDataType"/>
+            <complexType name="ActivityErrorDataType">
+                <choice>
+                    <element maxOccurs="1" minOccurs="0" ref="Q1:JMSInvalidInputException"/>
+                    <element maxOccurs="1" minOccurs="0" ref="Q1:JMSSessionCreateException"/>
+                    <element maxOccurs="1" minOccurs="0" ref="Q1:JMSReceiveException"/>
+                    <element maxOccurs="1" minOccurs="0" ref="Q2:ActivityTimedOutException"/>
                 </choice>
             </complexType>
         </schema>
@@ -1111,7 +1318,7 @@
                                     x="18"
                                     xsi:type="notation:Bounds" y="143"/>
                                     </children>
-                                    <children type="4002 bw.jms.requestreply">
+                                    <children type="4002 bw.xml.renderxml">
                                     <children type="4017">
                                     <styles
                                     fontName="Segoe UI"
@@ -1145,10 +1352,10 @@
                                     <element href="//0/@process/@activity/@activity/@activities.4"/>
                                     <layoutConstraint
                                     height="40" width="40"
-                                    x="164"
-                                    xsi:type="notation:Bounds" y="157"/>
+                                    x="142"
+                                    xsi:type="notation:Bounds" y="19"/>
                                     </children>
-                                    <children type="4002 bw.xml.renderxml">
+                                    <children type="4002 bw.jms.send">
                                     <children type="4017">
                                     <styles
                                     fontName="Segoe UI"
@@ -1182,8 +1389,45 @@
                                     <element href="//0/@process/@activity/@activity/@activities.5"/>
                                     <layoutConstraint
                                     height="40" width="40"
-                                    x="142"
-                                    xsi:type="notation:Bounds" y="19"/>
+                                    x="112"
+                                    xsi:type="notation:Bounds" y="200"/>
+                                    </children>
+                                    <children type="4002 bw.jms.getmsg">
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <styles fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <styles
+                                    backgroundColor="16777215"
+                                    gradientEndColor="50431"
+                                    gradientStartColor="16777215" xsi:type="bwnotation:BackgroundStyle"/>
+                                    <element href="//0/@process/@activity/@activity/@activities.6"/>
+                                    <layoutConstraint
+                                    height="40" width="40"
+                                    x="209"
+                                    xsi:type="notation:Bounds" y="269"/>
                                     </children>
                                     <styles xsi:type="notation:DrawerStyle"/>
                                     <styles xsi:type="notation:SortingStyle"/>
@@ -1232,7 +1476,7 @@
         <element href="//0"/>
         <edges
             source="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0"
-            target="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.5" type="4006">
+            target="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.4" type="4006">
             <children type="6002">
                 <layoutConstraint xsi:type="notation:Location" y="40"/>
             </children>
@@ -1242,17 +1486,6 @@
             <bendpoints points="[25, 3, -115, -14]$[116, 14, -24, -3]" xsi:type="notation:RelativeBendpoints"/>
         </edges>
         <edges
-            source="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.5"
-            target="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.4" type="4006">
-            <children type="6002">
-                <layoutConstraint xsi:type="notation:Location" y="40"/>
-            </children>
-            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
-            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
-            <element href="//0/@process/@activity/@activity/@links/@children.1"/>
-            <bendpoints points="[4, 25, -18, -113]$[18, 114, -4, -24]" xsi:type="notation:RelativeBendpoints"/>
-        </edges>
-        <edges
             source="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0"
             target="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.3" type="4006">
             <children type="6002">
@@ -1260,30 +1493,8 @@
             </children>
             <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
             <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
-            <element href="//0/@process/@activity/@activity/@links/@children.2"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.1"/>
             <bendpoints points="[3, 25, -13, -116]$[13, 117, -3, -24]" xsi:type="notation:RelativeBendpoints"/>
-        </edges>
-        <edges
-            source="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.3"
-            target="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.4" type="4006">
-            <children type="6002">
-                <layoutConstraint xsi:type="notation:Location" y="40"/>
-            </children>
-            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
-            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
-            <element href="//0/@process/@activity/@activity/@links/@children.3"/>
-            <bendpoints points="[25, 2, -121, -12]$[122, 12, -24, -2]" xsi:type="notation:RelativeBendpoints"/>
-        </edges>
-        <edges
-            source="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.4"
-            target="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2" type="4006">
-            <children type="6002">
-                <layoutConstraint xsi:type="notation:Location" y="40"/>
-            </children>
-            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
-            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
-            <element href="//0/@process/@activity/@activity/@links/@children.4"/>
-            <bendpoints points="[25, -8, -92, 0]$[93, 0, -24, 8]" xsi:type="notation:RelativeBendpoints"/>
         </edges>
         <edges
             source="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2"
@@ -1293,8 +1504,52 @@
             </children>
             <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
             <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
-            <element href="//0/@process/@activity/@activity/@links/@children.5"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.2"/>
             <bendpoints points="[25, -8, -91, 32]$[92, -32, -24, 8]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+        <edges
+            source="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.3"
+            target="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.5" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.3"/>
+            <bendpoints points="[25, 15, -69, -42]$[70, 42, -24, -15]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+        <edges
+            source="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.4"
+            target="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.5" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.4"/>
+            <bendpoints points="[-4, 25, 26, -156]$[-26, 157, 4, -24]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+        <edges
+            source="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.5"
+            target="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.6" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.5"/>
+            <bendpoints points="[25, -20, -65, 54]$[66, -54, -24, 20]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+        <edges
+            source="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.6"
+            target="//@children.0/@children.3/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.6"/>
+            <bendpoints points="[15, -24, -57, 96]$[57, -95, -15, 25]" xsi:type="notation:RelativeBendpoints"/>
         </edges>
     </notation:Diagram>
     <tibex:NamespaceRegistry enabled="true">
@@ -1303,6 +1558,8 @@
             namespace="http://www.tibco.com/namespaces/tnt/plugins/jms+c5de402e-65cb-490b-a1be-344150224826+input" prefix="tns1"/>
         <tibex:namespaceItem
             namespace="http://www.tibco.com/namespaces/tnt/plugins/parsexml" prefix="tns2"/>
+        <tibex:namespaceItem
+            namespace="http://www.tibco.com/namespaces/tnt/plugins/jms+1ae1d5b4-a6e8-44c5-9d14-47305197a338+input" prefix="tns3"/>
     </tibex:NamespaceRegistry>
     <bpws:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.example.org/LoanBank"/>
     <bpws:variables>
@@ -1332,12 +1589,6 @@
                 <bpws:literal>shared.JMSConnectionResource</bpws:literal>
             </bpws:from>
         </bpws:variable>
-        <bpws:variable element="ns5:ActivityInput"
-            name="JMSRequestReply-input" sca-bpel:internal="true"/>
-        <bpws:variable element="ns6:ActivityOutput"
-            name="JMSRequestReply" sca-bpel:internal="true"/>
-        <bpws:variable element="ns7:ActivityErrorData"
-            name="_error_JMSRequestReply" sca-bpel:internal="true"/>
         <bpws:variable element="ns8:LoanBank_input"
             name="RenderXml-input" sca-bpel:internal="true"/>
         <bpws:variable element="ns9:xmlString" name="RenderXml" sca-bpel:internal="true"/>
@@ -1347,6 +1598,18 @@
             sca-bpel:internal="true" tibex:parameter="in"/>
         <bpws:variable element="ns8:LoanBank_output" name="End-input"
             sca-bpel:internal="true" tibex:parameter="out"/>
+        <bpws:variable element="ns11:ActivityInput"
+            name="JMSSendMessage-input" sca-bpel:internal="true"/>
+        <bpws:variable element="ns12:aEmptyOutputClass"
+            name="JMSSendMessage" sca-bpel:internal="true"/>
+        <bpws:variable element="ns13:ActivityErrorData"
+            name="_error_JMSSendMessage" sca-bpel:internal="true"/>
+        <bpws:variable element="ns12:GetJMSActivityInput"
+            name="GetJMSQueueMessage-input" sca-bpel:internal="true"/>
+        <bpws:variable element="ns14:ActivityOutput"
+            name="GetJMSQueueMessage" sca-bpel:internal="true"/>
+        <bpws:variable element="ns15:ActivityErrorData"
+            name="_error_GetJMSQueueMessage" sca-bpel:internal="true"/>
     </bpws:variables>
     <bpws:extensions>
         <bpws:extension mustUnderstand="no" namespace="http://www.eclipse.org/gmf/runtime/1.0.2/notation"/>
@@ -1360,11 +1623,12 @@
         <bpws:flow name="flow">
             <bpws:links>
                 <bpws:link name="StartToRenderXml" tibex:linkType="SUCCESS"/>
-                <bpws:link name="RenderXmlToJMSRequestReply" tibex:linkType="SUCCESS"/>
                 <bpws:link name="StartToJDBCQuery" tibex:linkType="SUCCESS"/>
-                <bpws:link name="JDBCQueryToJMSRequestReply" tibex:linkType="SUCCESS"/>
-                <bpws:link name="JMSRequestReplyToParseXml" tibex:linkType="SUCCESS"/>
                 <bpws:link name="ParseXmlToEnd" tibex:linkType="SUCCESS"/>
+                <bpws:link name="JDBCQueryToJMSSendMessage" tibex:linkType="SUCCESS"/>
+                <bpws:link name="RenderXmlToJMSSendMessage" tibex:linkType="SUCCESS"/>
+                <bpws:link name="JMSSendMessageToGetJMSQueueMessage" tibex:linkType="SUCCESS"/>
+                <bpws:link name="GetJMSQueueMessageToParseXml" tibex:linkType="SUCCESS"/>
             </bpws:links>
             <bpws:extensionActivity>
                 <tibex:receiveEvent createInstance="yes"
@@ -1412,14 +1676,14 @@
                     name="ParseXml" outputVariable="ParseXml"
                     tibex:xpdlId="a3127e73-4948-4e2f-aa1c-155bb46372eb" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
                     <bpws:targets>
-                        <bpws:target linkName="JMSRequestReplyToParseXml"/>
+                        <bpws:target linkName="GetJMSQueueMessageToParseXml"/>
                     </bpws:targets>
                     <bpws:sources>
                         <bpws:source linkName="ParseXmlToEnd"/>
                     </bpws:sources>
                     <tibex:inputBindings>
                         <tibex:inputBinding
-                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns2=&quot;http://www.tibco.com/namespaces/tnt/plugins/parsexml&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;RenderXml&quot;/>&lt;xsl:template name=&quot;ParseXml-input&quot; match=&quot;/&quot;>&lt;tns2:xmlString>&lt;xsl:value-of select=&quot;$RenderXml&quot;/>&lt;/tns2:xmlString>&lt;/xsl:template>&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns2=&quot;http://www.tibco.com/namespaces/tnt/plugins/parsexml&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;GetJMSQueueMessage&quot;/>&lt;xsl:template name=&quot;ParseXml-input&quot; match=&quot;/&quot;>&lt;tns2:xmlString>&lt;xsl:value-of select=&quot;$GetJMSQueueMessage/Body&quot;/>&lt;/tns2:xmlString>&lt;/xsl:template>&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
                     </tibex:inputBindings>
                     <tibex:config>
                         <bwext:BWActivity
@@ -1449,11 +1713,11 @@
                         <bpws:target linkName="StartToJDBCQuery"/>
                     </bpws:targets>
                     <bpws:sources>
-                        <bpws:source linkName="JDBCQueryToJMSRequestReply"/>
+                        <bpws:source linkName="JDBCQueryToJMSSendMessage"/>
                     </bpws:sources>
                     <tibex:inputBindings>
                         <tibex:inputBinding
-                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns3=&quot;http://www.tibco.com/namespaces/tnt/plugins/jdbc+6d318197-0845-401c-9f9f-2d0679912d98+input&quot; version=&quot;2.0&quot;>&#xa;    &lt;xsl:template name=&quot;JDBCQuery-input&quot; match=&quot;/&quot;>&#xa;        &lt;tns3:jdbcQueryActivityInput/>&#xa;    &lt;/xsl:template>&#xa;&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns4=&quot;http://www.tibco.com/namespaces/tnt/plugins/jdbc+6d318197-0845-401c-9f9f-2d0679912d98+input&quot; version=&quot;2.0&quot;>&#xa;    &lt;xsl:template name=&quot;JDBCQuery-input&quot; match=&quot;/&quot;>&#xa;        &lt;tns4:jdbcQueryActivityInput/>&#xa;    &lt;/xsl:template>&#xa;&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
                     </tibex:inputBindings>
                     <tibex:config>
                         <bwext:BWActivity
@@ -1479,44 +1743,6 @@
                 </tibex:activityExtension>
             </bpws:extensionActivity>
             <bpws:extensionActivity>
-                <tibex:activityExtension
-                    inputVariable="JMSRequestReply-input"
-                    name="JMSRequestReply"
-                    outputVariable="JMSRequestReply"
-                    tibex:xpdlId="c5de402e-65cb-490b-a1be-344150224826" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
-                    <bpws:targets>
-                        <bpws:target linkName="RenderXmlToJMSRequestReply"/>
-                        <bpws:target linkName="JDBCQueryToJMSRequestReply"/>
-                    </bpws:targets>
-                    <bpws:sources>
-                        <bpws:source linkName="JMSRequestReplyToParseXml"/>
-                    </bpws:sources>
-                    <tibex:inputBindings>
-                        <tibex:inputBinding
-                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns1=&quot;http://www.tibco.com/namespaces/tnt/plugins/jms+c5de402e-65cb-490b-a1be-344150224826+input&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;JDBCQuery&quot;/>&lt;xsl:param name=&quot;RenderXml&quot;/>&lt;xsl:template name=&quot;JMSRequestReply-input&quot; match=&quot;/&quot;>&lt;tns1:ActivityInput>&lt;xsl:if test=&quot;$JDBCQuery/Record[3]/queue&quot;>&lt;destination>&lt;xsl:value-of select=&quot;$JDBCQuery/Record[3]/queue&quot;/>&lt;/destination>&lt;/xsl:if>&lt;Body>&lt;xsl:value-of select=&quot;$RenderXml&quot;/>&lt;/Body>&lt;/tns1:ActivityInput>&lt;/xsl:template>&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
-                    </tibex:inputBindings>
-                    <tibex:config>
-                        <bwext:BWActivity
-                            activityTypeID="bw.jms.requestreply"
-                            version="6.0.0.20132205"
-                            xmlns:activityconfig="http://tns.tibco.com/bw/model/activityconfig"
-                            xmlns:bwext="http://tns.tibco.com/bw/model/core/bwext"
-                            xmlns:jms="http://ns.tibco.com/bw/palette/jms" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                            <activityConfig>
-                                <properties name="config" xsi:type="activityconfig:EMFProperty">
-                                    <type href="http://ns.tibco.com/bw/palette/jms#//JMSRequestReplyActivity"/>
-                                    <value
-                                    connectionReference="jmsConnection"
-                                    destinationName="empty"
-                                    messagingStyle="Queue"
-                                    priority="4" xsi:type="jms:JMSRequestReplyActivity"/>
-                                </properties>
-                            </activityConfig>
-                        </bwext:BWActivity>
-                    </tibex:config>
-                </tibex:activityExtension>
-            </bpws:extensionActivity>
-            <bpws:extensionActivity>
                 <tibex:activityExtension inputVariable="RenderXml-input"
                     name="RenderXml" outputVariable="RenderXml"
                     tibex:xpdlId="c7d90c29-83b0-47d0-9751-7a587267e932" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
@@ -1524,7 +1750,7 @@
                         <bpws:target linkName="StartToRenderXml"/>
                     </bpws:targets>
                     <bpws:sources>
-                        <bpws:source linkName="RenderXmlToJMSRequestReply"/>
+                        <bpws:source linkName="RenderXmlToJMSSendMessage"/>
                     </bpws:sources>
                     <tibex:inputBindings>
                         <tibex:inputBinding
@@ -1544,6 +1770,78 @@
                                     <value
                                     inputElementQName="LoanBank:LoanBank_input"
                                     outputStyle="text" xsi:type="palettexml:RenderXml"/>
+                                </properties>
+                            </activityConfig>
+                        </bwext:BWActivity>
+                    </tibex:config>
+                </tibex:activityExtension>
+            </bpws:extensionActivity>
+            <bpws:extensionActivity>
+                <tibex:activityExtension
+                    inputVariable="JMSSendMessage-input"
+                    name="JMSSendMessage"
+                    outputVariable="JMSSendMessage"
+                    tibex:xpdlId="1ae1d5b4-a6e8-44c5-9d14-47305197a338" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
+                    <bpws:targets>
+                        <bpws:target linkName="JDBCQueryToJMSSendMessage"/>
+                        <bpws:target linkName="RenderXmlToJMSSendMessage"/>
+                    </bpws:targets>
+                    <bpws:sources>
+                        <bpws:source linkName="JMSSendMessageToGetJMSQueueMessage"/>
+                    </bpws:sources>
+                    <tibex:inputBindings>
+                        <tibex:inputBinding
+                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns3=&quot;http://www.tibco.com/namespaces/tnt/plugins/jms+1ae1d5b4-a6e8-44c5-9d14-47305197a338+input&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;RenderXml&quot;/>&lt;xsl:param name=&quot;JDBCQuery&quot;/>&lt;xsl:template name=&quot;JMSSendMessage-input&quot; match=&quot;/&quot;>&lt;tns3:ActivityInput>&lt;xsl:if test=&quot;$JDBCQuery/Record[3]/queue&quot;>&lt;destination>&lt;xsl:value-of select=&quot;$JDBCQuery/Record[3]/queue&quot;/>&lt;/destination>&lt;/xsl:if>&lt;Body>&lt;xsl:value-of select=&quot;$RenderXml&quot;/>&lt;/Body>&lt;/tns3:ActivityInput>&lt;/xsl:template>&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                    </tibex:inputBindings>
+                    <tibex:config>
+                        <bwext:BWActivity activityTypeID="bw.jms.send"
+                            version="6.0.0.20132205"
+                            xmlns:activityconfig="http://tns.tibco.com/bw/model/activityconfig"
+                            xmlns:bwext="http://tns.tibco.com/bw/model/core/bwext"
+                            xmlns:jms="http://ns.tibco.com/bw/palette/jms" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                            <activityConfig>
+                                <properties name="config" xsi:type="activityconfig:EMFProperty">
+                                    <type href="http://ns.tibco.com/bw/palette/jms#//JMSSenderActivityConfiguration"/>
+                                    <value
+                                    connectionReference="jmsConnection"
+                                    destinationName="empty"
+                                    messagingStyle="Queue"
+                                    priority="4" xsi:type="jms:JMSSenderActivityConfiguration"/>
+                                </properties>
+                            </activityConfig>
+                        </bwext:BWActivity>
+                    </tibex:config>
+                </tibex:activityExtension>
+            </bpws:extensionActivity>
+            <bpws:extensionActivity>
+                <tibex:activityExtension
+                    inputVariable="GetJMSQueueMessage-input"
+                    name="GetJMSQueueMessage"
+                    outputVariable="GetJMSQueueMessage"
+                    tibex:xpdlId="02fe9ebd-43db-4d7c-a9ce-899b55919632" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
+                    <bpws:targets>
+                        <bpws:target linkName="JMSSendMessageToGetJMSQueueMessage"/>
+                    </bpws:targets>
+                    <bpws:sources>
+                        <bpws:source linkName="GetJMSQueueMessageToParseXml"/>
+                    </bpws:sources>
+                    <tibex:inputBindings>
+                        <tibex:inputBinding
+                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns4=&quot;http://www.tibco.com/namespaces/tnt/plugins/jms&quot; version=&quot;2.0&quot;>&#xa;    &lt;xsl:template name=&quot;GetJMSQueueMessage-input&quot; match=&quot;/&quot;>&#xa;        &lt;tns4:GetJMSActivityInput/>&#xa;    &lt;/xsl:template>&#xa;&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                    </tibex:inputBindings>
+                    <tibex:config>
+                        <bwext:BWActivity activityTypeID="bw.jms.getmsg"
+                            version="6.0.0.20132205"
+                            xmlns:activityconfig="http://tns.tibco.com/bw/model/activityconfig"
+                            xmlns:bwext="http://tns.tibco.com/bw/model/core/bwext"
+                            xmlns:jms="http://ns.tibco.com/bw/palette/jms" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                            <activityConfig>
+                                <properties name="config" xsi:type="activityconfig:EMFProperty">
+                                    <type href="http://ns.tibco.com/bw/palette/jms#//GetJMSQueueMessage"/>
+                                    <value
+                                    connectionReference="jmsConnection"
+                                    destinationName="bank_common_q"
+                                    messagingStyle="Queue" xsi:type="jms:GetJMSQueueMessage"/>
                                 </properties>
                             </activityConfig>
                         </bwext:BWActivity>

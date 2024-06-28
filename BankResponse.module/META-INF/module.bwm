@@ -12,4 +12,10 @@
   <sca:component xmi:id="_9yTS8DUxEe-qccZ0joD7gQ" name="ComponentProcess" compositeext:version="1.0.0.qualifier">
     <scaext:implementation xsi:type="BW:BWComponentImplementation" xmi:id="_9yTS8TUxEe-qccZ0joD7gQ" processName="bankresponse.module.Bank1"/>
   </sca:component>
+  <sca:component xmi:id="_PynCcDVNEe-qccZ0joD7gQ" name="ComponentBank2" compositeext:version="1.0.0.qualifier">
+    <scaext:implementation xsi:type="BW:BWComponentImplementation" xmi:id="_PynCcTVNEe-qccZ0joD7gQ" processName="bankresponse.module.Bank2"/>
+  </sca:component>
+  <sca:component xmi:id="_SDKv0DVNEe-qccZ0joD7gQ" name="ComponentBank3" compositeext:version="1.0.0.qualifier">
+    <scaext:implementation xsi:type="BW:BWComponentImplementation" xmi:id="_SDKv0TVNEe-qccZ0joD7gQ" processName="bankresponse.module.Bank3"/>
+  </sca:component>
 </sca:composite>
