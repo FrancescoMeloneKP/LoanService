@@ -4,13 +4,13 @@
 	xmlns:tns="uri_types">
 	<xs:complexType name="CustomerInfo_type">
 		<xs:sequence>
-			<xs:element name="name" type="xs:string" minOccurs="1"
+			<xs:element name="name" type="xs:string" minOccurs="0"
 				maxOccurs="1" />
-			<xs:element name="surname" type="xs:string" minOccurs="1"
+			<xs:element name="surname" type="xs:string" minOccurs="0"
 				maxOccurs="1" />
 			<xs:element name="age" type="xs:integer"
-				minOccurs="1" maxOccurs="1" />
-			<xs:element name="annual_salary" type="xs:decimal" minOccurs="1"
+				minOccurs="0" maxOccurs="1" />
+			<xs:element name="annual_salary" type="xs:decimal" minOccurs="0"
 				maxOccurs="1" />
 			<xs:element name="tax_code" type="xs:string" minOccurs="1"
 				maxOccurs="1" />
