@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Loan</name>
+	<name>BankResponse.module</name>
 	<comment></comment>
 	<projects>
 		<project>Shared</project>
@@ -13,11 +13,6 @@
 		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.pde.SchemaBuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
-			<name>com.tibco.bw.rest.RestSchemaBuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>

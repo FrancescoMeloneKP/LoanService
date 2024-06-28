@@ -10,7 +10,7 @@
 	<complexType name="LoanBank_input_type">
 		<sequence>
 			<element name="loanservice_input" type="ls:LoanService_input_type"
-				minOccurs="1" maxOccurs="1" />
+				minOccurs="0" maxOccurs="1" />
 			<element name="cust_hystory_input" type="t:CustomerCreditHistory_type"
 				minOccurs="1" maxOccurs="1" />
 		</sequence>

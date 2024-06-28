@@ -1,0 +1,111 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0",
+    "title" : "Loan",
+    "description" : "Loan service"
+  },
+  "host" : "localhost:8080",
+  "basePath" : "/",
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/loan" : {
+      "get" : {
+        "summary" : "getLoan",
+        "description" : "getLoan",
+        "operationId" : "get-loan",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "tax_code",
+          "in" : "query",
+          "description" : "",
+          "type" : "string",
+          "required" : true
+        }, {
+          "name" : "amount",
+          "in" : "query",
+          "description" : "",
+          "type" : "string",
+          "required" : false
+        }, {
+          "name" : "surname",
+          "in" : "query",
+          "description" : "",
+          "type" : "string",
+          "required" : false
+        }, {
+          "name" : "name",
+          "in" : "query",
+          "description" : "",
+          "type" : "string",
+          "required" : false
+        }, {
+          "name" : "npayments",
+          "in" : "query",
+          "description" : "",
+          "type" : "string",
+          "required" : false
+        }, {
+          "name" : "salary",
+          "in" : "query",
+          "description" : "",
+          "type" : "string",
+          "required" : false
+        }, {
+          "name" : "age",
+          "in" : "query",
+          "description" : "",
+          "type" : "integer",
+          "format" : "int32",
+          "required" : false
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "a LoanService_output to be returned",
+            "schema" : {
+              "$ref" : "#/definitions/LoanService_output"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "bank_cond_output" : {
+      "type" : "object",
+      "required" : [ "tan", "bank_name", "monthly_amount", "taeg", "payments_number" ],
+      "properties" : {
+        "bank_name" : {
+          "type" : "string"
+        },
+        "taeg" : {
+          "type" : "integer"
+        },
+        "tan" : {
+          "type" : "integer"
+        },
+        "payments_number" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "monthly_amount" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "LoanService_output" : {
+      "type" : "object",
+      "required" : [ "bank_cond_output" ],
+      "properties" : {
+        "bank_cond_output" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/bank_cond_output",
+            "uniqueItems" : false
+          }
+        }
+      }
+    }
+  }
+}

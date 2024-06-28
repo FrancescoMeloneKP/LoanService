@@ -1,0 +1,5 @@
+{"records": [{
+    "jsonSchemaLocation": "/Loan/Service Descriptors/loan.Loan-Loan.json",
+    "conversionType": "linked",
+    "xsdSchemaTargetNamespace": "http://www.example.org/LoanService"
+}]}

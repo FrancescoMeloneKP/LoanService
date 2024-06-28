@@ -1,5 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sca:composite xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:BW="http://xsd.tns.tibco.com/amf/models/sca/implementationtype/BW" xmlns:XMLSchema="http://www.w3.org/2001/XMLSchema" xmlns:compositeext="http://schemas.tibco.com/amx/3.0/compositeext" xmlns:sca="http://www.osoa.org/xmlns/sca/1.0" xmlns:scaext="http://xsd.tns.tibco.com/amf/models/sca/extensions" xmi:id="_cBH88DO8Ee-z6vzdrOrLIA" targetNamespace="http://tns.tibco.com/bw/composite/Loan" name="Loan" compositeext:version="1.0.0" compositeext:formatVersion="2">
+<sca:composite xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:BW="http://xsd.tns.tibco.com/amf/models/sca/implementationtype/BW" xmlns:XMLSchema="http://www.w3.org/2001/XMLSchema" xmlns:compositeext="http://schemas.tibco.com/amx/3.0/compositeext" xmlns:rest="http://xsd.tns.tibco.com/bw/models/binding/rest" xmlns:sca="http://www.osoa.org/xmlns/sca/1.0" xmlns:scact="http://xsd.tns.tibco.com/amf/models/sca/componentType" xmlns:scaext="http://xsd.tns.tibco.com/amf/models/sca/extensions" xmi:id="_cBH88DO8Ee-z6vzdrOrLIA" targetNamespace="http://tns.tibco.com/bw/composite/Loan" name="Loan" compositeext:version="1.0.0" compositeext:formatVersion="2">
+  <sca:service xmi:id="_K1MGEDRkEe-Rm9QGFyGmDw" name="loan" promote="ComponentLoan/loan">
+    <sca:interface.wsdl xmi:id="_K1SzwDRkEe-Rm9QGFyGmDw" interface="http://xmlns.example.com/20240627110349PLT#wsdl.interface(loan)" scaext:wsdlLocation="../Processes/loan/Loan.bwp"/>
+    <scaext:binding xsi:type="rest:RestServiceBinding" xmi:id="_K1b9sDRkEe-Rm9QGFyGmDw" name="RestService" path="/loan" docBasePath="http://localhost:7777/Loan" docResourcePath="Loan" basePath="/" connector="loan.Loan" structuredData="true" technologyVersion="2.0" implementation="Service Descriptors/loan.Loan-Loan.json">
+      <operation xmi:id="_K1r1UDRkEe-Rm9QGFyGmDw" operationName="get" nickname="get-loan" httpMethod="GET" notes="getLoan" responseStyle="element" outputPartName="item">
+        <parameters xmi:id="_rAeh0DRkEe-Rm9QGFyGmDw">
+          <parameterMapping xmi:id="_rAeh0TRkEe-Rm9QGFyGmDw" parameterName="name" parameterType="Query" dataType="string" description=""/>
+          <parameterMapping xmi:id="_ry4PIDRkEe-Rm9QGFyGmDw" parameterName="surname" parameterType="Query" dataType="string" description=""/>
+          <parameterMapping xmi:id="_r-dNADRkEe-Rm9QGFyGmDw" parameterName="age" parameterType="Query" dataType="integer#int32" description=""/>
+          <parameterMapping xmi:id="_RT4yYDRlEe-Rm9QGFyGmDw" parameterName="salary" parameterType="Query" dataType="string" description=""/>
+          <parameterMapping xmi:id="_RhuaEDRlEe-Rm9QGFyGmDw" parameterName="tax_code" parameterType="Query" dataType="string" required="true" description=""/>
+          <parameterMapping xmi:id="_a9JysDRlEe-Rm9QGFyGmDw" parameterName="amount" parameterType="Query" dataType="string" description=""/>
+          <parameterMapping xmi:id="_bEUKoDRlEe-Rm9QGFyGmDw" parameterName="npayments" parameterType="Query" dataType="string" description=""/>
+        </parameters>
+        <clientFormat>json</clientFormat>
+        <clientRequestFormat>json</clientRequestFormat>
+      </operation>
+      <parameters xmi:id="_K3FjgDRkEe-Rm9QGFyGmDw"/>
+      <advancedConfig xmi:id="_K1lusDRkEe-Rm9QGFyGmDw" blockingQueueSize="8192"/>
+    </scaext:binding>
+    <scact:bindingAdjunct xmi:id="_K1r1UTRkEe-Rm9QGFyGmDw" bindingName="RestService"/>
+  </sca:service>
   <sca:property xmi:id="_daim8DO8Ee-z6vzdrOrLIA" name="BW.DEPLOYMENTUNIT.TYPE" type="XMLSchema:string" scalable="true"/>
   <sca:property xmi:id="_da6aYDO8Ee-z6vzdrOrLIA" name="BW.APPNODE.NAME" type="XMLSchema:string" scalable="true"/>
   <sca:property xmi:id="_dbBvIDO8Ee-z6vzdrOrLIA" name="BW.DEPLOYMENTUNIT.NAME" type="XMLSchema:string" scalable="true"/>
@@ -9,7 +30,10 @@
   <sca:property xmi:id="_dbfCIDO8Ee-z6vzdrOrLIA" name="BW.APPSPACE.NAME" type="XMLSchema:string" scalable="true"/>
   <sca:property xmi:id="_dblv0DO8Ee-z6vzdrOrLIA" name="BW.MODULE.VERSION" type="XMLSchema:string" scalable="true"/>
   <sca:property xmi:id="_dbsdgDO8Ee-z6vzdrOrLIA" name="BW.MODULE.NAME" type="XMLSchema:string" scalable="true"/>
-  <sca:component xmi:id="_cziRUDO8Ee-z6vzdrOrLIA" name="ComponentProcess" compositeext:version="1.0.0.qualifier">
-    <scaext:implementation xsi:type="BW:BWComponentImplementation" xmi:id="_cziRUTO8Ee-z6vzdrOrLIA" processName="loan.Process"/>
+  <sca:component xmi:id="_K02H0DRkEe-Rm9QGFyGmDw" name="ComponentLoan" compositeext:version="1.0.0.qualifier">
+    <scaext:implementation xsi:type="BW:BWComponentImplementation" xmi:id="_K02H0TRkEe-Rm9QGFyGmDw" processName="loan.Loan"/>
+    <sca:service xmi:id="_K0_RwDRkEe-Rm9QGFyGmDw" name="loan">
+      <sca:interface.wsdl xmi:id="_K0_RwTRkEe-Rm9QGFyGmDw" interface="http://xmlns.example.com/20240627110349PLT#wsdl.interface(loan)" scaext:wsdlLocation="../Processes/loan/Loan.bwp"/>
+    </sca:service>
   </sca:component>
 </sca:composite>
