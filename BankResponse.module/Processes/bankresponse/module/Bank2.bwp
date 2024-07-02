@@ -23,6 +23,7 @@
             <endingVariables>
                 <variable>JMSSendMessage-input</variable>
                 <variable>JMSSendMessage</variable>
+                <variable>ParseXml</variable>
                 <variable>RenderXml</variable>
             </endingVariables>
         </task>
@@ -35,7 +36,6 @@
         <task name="RenderXml">
             <endingVariables>
                 <variable>RenderXml-input</variable>
-                <variable>ParseXml</variable>
             </endingVariables>
         </task>
     </tibex:VariableDescriptor>
@@ -1232,6 +1232,9 @@
         <tibex:namespaceItem namespace="uri_types" prefix="tns1"/>
         <tibex:namespaceItem
             namespace="http://www.tibco.com/namespaces/tnt/plugins/jms+4b93f213-8546-4c0e-b6f9-6c5f78abceb2+input" prefix="tns2"/>
+        <tibex:namespaceItem namespace="http://www.example.org/LoanBank" prefix="tns3"/>
+        <tibex:namespaceItem
+            namespace="http://www.example.org/LoanService" prefix="tns4"/>
     </tibex:NamespaceRegistry>
     <bpws:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.example.org/LoanBank"/>
     <bpws:variables>
@@ -1319,7 +1322,7 @@
                     </bpws:targets>
                     <tibex:inputBindings>
                         <tibex:inputBinding
-                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns2=&quot;http://www.tibco.com/namespaces/tnt/plugins/jms+4b93f213-8546-4c0e-b6f9-6c5f78abceb2+input&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;RenderXml&quot;/>&lt;xsl:template name=&quot;JMSSendMessage-input&quot; match=&quot;/&quot;>&lt;tns2:ActivityInput>&lt;Body>&lt;xsl:value-of select=&quot;$RenderXml&quot;/>&lt;/Body>&lt;/tns2:ActivityInput>&lt;/xsl:template>&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns2=&quot;http://www.tibco.com/namespaces/tnt/plugins/jms+4b93f213-8546-4c0e-b6f9-6c5f78abceb2+input&quot; xmlns:tns1=&quot;uri_types&quot; xmlns:tns4=&quot;http://www.example.org/LoanService&quot; xmlns:tns3=&quot;http://www.example.org/LoanBank&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;RenderXml&quot;/>&lt;xsl:param name=&quot;ParseXml&quot;/>&lt;xsl:template name=&quot;JMSSendMessage-input&quot; match=&quot;/&quot;>&lt;tns2:ActivityInput>&lt;xsl:if test=&quot;$ParseXml/tns3:loanservice_input/tns4:cust_input/tns1:tax_code&quot;>&lt;JMSCorrelationID>&lt;xsl:value-of select=&quot;$ParseXml/tns3:loanservice_input/tns4:cust_input/tns1:tax_code&quot;/>&lt;/JMSCorrelationID>&lt;/xsl:if>&lt;Body>&lt;xsl:value-of select=&quot;$RenderXml&quot;/>&lt;/Body>&lt;/tns2:ActivityInput>&lt;/xsl:template>&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
                     </tibex:inputBindings>
                     <tibex:config>
                         <bwext:BWActivity activityTypeID="bw.jms.send"

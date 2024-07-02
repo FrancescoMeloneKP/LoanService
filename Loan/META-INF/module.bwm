@@ -30,6 +30,8 @@
   <sca:property xmi:id="_dbfCIDO8Ee-z6vzdrOrLIA" name="BW.APPSPACE.NAME" type="XMLSchema:string" scalable="true"/>
   <sca:property xmi:id="_dblv0DO8Ee-z6vzdrOrLIA" name="BW.MODULE.VERSION" type="XMLSchema:string" scalable="true"/>
   <sca:property xmi:id="_dbsdgDO8Ee-z6vzdrOrLIA" name="BW.MODULE.NAME" type="XMLSchema:string" scalable="true"/>
+  <sca:property xmi:id="_rFoLoDhWEe-CF4nNvKcDQw" name="Property" type="XMLSchema:string" scaext:simpleValue="" publicAccess="true" scalable="true"/>
+  <sca:property xmi:id="_sU3l8DhWEe-CF4nNvKcDQw" name="Property1" type="XMLSchema:string" scaext:simpleValue="" publicAccess="true" scalable="true"/>
   <sca:component xmi:id="_K02H0DRkEe-Rm9QGFyGmDw" name="ComponentLoan" compositeext:version="1.0.0.qualifier">
     <scaext:implementation xsi:type="BW:BWComponentImplementation" xmi:id="_K02H0TRkEe-Rm9QGFyGmDw" processName="loan.Loan"/>
     <sca:service xmi:id="_K0_RwDRkEe-Rm9QGFyGmDw" name="loan">
