@@ -13,6 +13,7 @@
     xmlns:ns5="http://www.example.org/LoanBank"
     xmlns:ns6="http://www.tibco.com/namespaces/tnt/plugins/jms+c5696462-814b-4902-a3d7-ebc92264805a+output"
     xmlns:ns7="http://www.tibco.com/namespaces/tnt/plugins/jms+6e800bb1-13e2-4ea7-9945-1554887e1fa5+output"
+    xmlns:ns8="http://www.example.org/LoanService"
     xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912"
     xmlns:sca-bpel="http://docs.oasis-open.org/ns/opencsa/sca-bpel/200801"
     xmlns:tibex="http://www.tibco.com/bpel/2007/extensions"
@@ -32,6 +33,7 @@
         <task name="GetJMSQueueMessage">
             <endingVariables>
                 <variable>GetJMSQueueMessage-input</variable>
+                <variable>Start</variable>
             </endingVariables>
         </task>
     </tibex:VariableDescriptor>
@@ -751,7 +753,8 @@
         extraErrorVars="true" modifiers="public"
         productVersion="6.10.0 V23 2023-11-10" scalable="true"
         singleton="true" stateless="false" type="IT"/>
-    <tibex:ProcessInterface context="" input="" output="{http://www.example.org/LoanBank}LoanBank_output"/>
+    <tibex:ProcessInterface context=""
+        input="{http://www.example.org/LoanService}LoanService_input" output="{http://www.example.org/LoanBank}LoanBank_output"/>
     <tibex:ProcessTemplateConfigurations/>
     <notation:Diagram measurementUnit="Pixel" type="BWProcess"
         xmlns:bwnotation="http://tns.tibco.com/bw/runtime/BWNotation"
@@ -1004,6 +1007,7 @@
         <tibex:namespaceItem namespace="http://www.example.org/LoanBank" prefix="tns2"/>
     </tibex:NamespaceRegistry>
     <bpws:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.example.org/LoanBank"/>
+    <bpws:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.example.org/LoanService"/>
     <bpws:variables>
         <bpws:variable element="ns:ProcessContext"
             name="_processContext" sca-bpel:internal="true"/>
@@ -1027,6 +1031,8 @@
             name="GetJMSQueueMessage" sca-bpel:internal="true"/>
         <bpws:variable element="ns2:ActivityErrorData"
             name="_error_GetJMSQueueMessage" sca-bpel:internal="true"/>
+        <bpws:variable element="ns8:LoanService_input" name="Start"
+            sca-bpel:internal="true" tibex:parameter="in"/>
     </bpws:variables>
     <bpws:extensions>
         <bpws:extension mustUnderstand="no" namespace="http://www.eclipse.org/gmf/runtime/1.0.2/notation"/>
@@ -1046,7 +1052,8 @@
             <bpws:extensionActivity>
                 <tibex:receiveEvent createInstance="yes"
                     eventTimeout="0" name="Start"
-                    tibex:xpdlId="580f0fbf-5c49-4f76-96fd-15defba3ffda" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
+                    tibex:xpdlId="580f0fbf-5c49-4f76-96fd-15defba3ffda"
+                    variable="Start" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
                     <bpws:sources>
                         <bpws:source linkName="StartToParseXml"/>
                     </bpws:sources>
@@ -1130,7 +1137,7 @@
                     </bpws:sources>
                     <tibex:inputBindings>
                         <tibex:inputBinding
-                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://www.tibco.com/namespaces/tnt/plugins/jms&quot; version=&quot;2.0&quot;>&lt;xsl:template name=&quot;GetJMSQueueMessage-input&quot; match=&quot;/&quot;>&lt;tns:GetJMSActivityInput>&lt;selector>&lt;xsl:value-of select=&quot;concat(&amp;quot;JMSCorrelationID = '&amp;quot;        ,'B',&amp;quot;'&amp;quot;)&quot;/>&lt;/selector>&lt;/tns:GetJMSActivityInput>&lt;/xsl:template>&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://www.tibco.com/namespaces/tnt/plugins/jms&quot; xmlns:tns1=&quot;uri_types&quot; xmlns:tns2=&quot;http://www.example.org/LoanService&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;Start&quot;/>&lt;xsl:template name=&quot;GetJMSQueueMessage-input&quot; match=&quot;/&quot;>&lt;tns:GetJMSActivityInput>&lt;selector>&lt;xsl:value-of select=&quot;concat(&amp;quot;JMSCorrelationID = '&amp;quot;        ,$Start/tns2:cust_input/tns1:tax_code,&amp;quot;'&amp;quot;)&quot;/>&lt;/selector>&lt;/tns:GetJMSActivityInput>&lt;/xsl:template>&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
                     </tibex:inputBindings>
                     <tibex:config>
                         <bwext:BWActivity activityTypeID="bw.jms.getmsg"

@@ -10,6 +10,7 @@
     xmlns:ns2="http://tns.tibco.com/bw/palette/internal/activityerror+9b583b55-cd34-4feb-afa0-86bde3bdcaca"
     xmlns:ns3="http://www.example.org/LoanBank"
     xmlns:ns4="http://www.tibco.com/pe/WriteToLogActivitySchema"
+    xmlns:ns5="http://www.example.org/LoanService"
     xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912"
     xmlns:sca-bpel="http://docs.oasis-open.org/ns/opencsa/sca-bpel/200801"
     xmlns:tibex="http://www.tibco.com/bpel/2007/extensions"
@@ -43,6 +44,21 @@
         <task name="Loan_Bank3">
             <endingVariables>
                 <variable>Loan_Bank3-input</variable>
+            </endingVariables>
+        </task>
+        <task name="Receiver">
+            <endingVariables>
+                <variable>Receiver-input</variable>
+            </endingVariables>
+        </task>
+        <task name="Receiver2">
+            <endingVariables>
+                <variable>Receiver2-input</variable>
+            </endingVariables>
+        </task>
+        <task name="Receiver3">
+            <endingVariables>
+                <variable>Receiver3-input</variable>
             </endingVariables>
         </task>
     </tibex:VariableDescriptor>
@@ -1199,6 +1215,12 @@
         <bpws:variable element="ns3:LoanBank_output" name="Receiver" sca-bpel:internal="true"/>
         <bpws:variable element="ns3:LoanBank_output" name="Receiver2" sca-bpel:internal="true"/>
         <bpws:variable element="ns3:LoanBank_output" name="Receiver3" sca-bpel:internal="true"/>
+        <bpws:variable element="ns5:LoanService_input"
+            name="Receiver-input" sca-bpel:internal="true"/>
+        <bpws:variable element="ns5:LoanService_input"
+            name="Receiver2-input" sca-bpel:internal="true"/>
+        <bpws:variable element="ns5:LoanService_input"
+            name="Receiver3-input" sca-bpel:internal="true"/>
     </bpws:variables>
     <bpws:extensions>
         <bpws:extension mustUnderstand="no" namespace="http://www.eclipse.org/gmf/runtime/1.0.2/notation"/>
@@ -1340,7 +1362,11 @@
                                 </tibex:extActivity>
                             </bpws:extensionActivity>
                             <bpws:extensionActivity>
-                                <tibex:extActivity name="Receiver"
+                                <tibex:extActivity
+                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://xmlns.example.com/Loan/parameters&quot; xmlns:tns5=&quot;http://www.example.org/LoanService&quot; xmlns:tns3=&quot;uri_types&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;get&quot;/>&lt;xsl:template name=&quot;Receiver-input&quot; match=&quot;/&quot;>&lt;tns5:LoanService_input>&lt;tns5:cust_input>&lt;tns3:tax_code>&lt;xsl:value-of select=&quot;$get/parameters/tns:loanGetParameters/tns:tax_code&quot;/>&lt;/tns3:tax_code>&lt;/tns5:cust_input>&lt;/tns5:LoanService_input>&lt;/xsl:template>&lt;/xsl:stylesheet>"
+                                    expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"
+                                    inputVariable="Receiver-input"
+                                    name="Receiver"
                                     outputVariable="Receiver"
                                     tibex:xpdlId="2ed4459a-61b1-40bf-aa17-65f06496170b"
                                     type="bw.generalactivities.callprocess" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
@@ -1350,12 +1376,20 @@
                                     <bpws:sources>
                                     <bpws:source linkName="ReceiverTogetOut"/>
                                     </bpws:sources>
+                                    <tibex:inputBindings>
+                                    <tibex:inputBinding coercion=""
+                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://xmlns.example.com/Loan/parameters&quot; xmlns:tns5=&quot;http://www.example.org/LoanService&quot; xmlns:tns3=&quot;uri_types&quot; version=&quot;2.0&quot;>&#xa;    &lt;xsl:param name=&quot;get.parameters&quot;/>&#xa;    &lt;xsl:template name=&quot;Receiver-input&quot; match=&quot;/&quot;>&#xa;        &lt;tns5:LoanService_input>&#xa;            &lt;tns5:cust_input>&#xa;                &lt;tns3:tax_code>&#xa;                    &lt;xsl:value-of select=&quot;$get.parameters/tns:tax_code&quot;/>&#xa;                &lt;/tns3:tax_code>&#xa;            &lt;/tns5:cust_input>&#xa;        &lt;/tns5:LoanService_input>&#xa;    &lt;/xsl:template>&#xa;&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                                    </tibex:inputBindings>
                                     <tibex:CallProcess
                                     subProcessName="loan_b.Receiver" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions"/>
                                 </tibex:extActivity>
                             </bpws:extensionActivity>
                             <bpws:extensionActivity>
-                                <tibex:extActivity name="Receiver2"
+                                <tibex:extActivity
+                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://xmlns.example.com/Loan/parameters&quot; xmlns:tns5=&quot;http://www.example.org/LoanService&quot; xmlns:tns3=&quot;uri_types&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;get&quot;/>&lt;xsl:template name=&quot;Receiver2-input&quot; match=&quot;/&quot;>&lt;tns5:LoanService_input>&lt;tns5:cust_input>&lt;tns3:tax_code>&lt;xsl:value-of select=&quot;$get/parameters/tns:loanGetParameters/tns:tax_code&quot;/>&lt;/tns3:tax_code>&lt;/tns5:cust_input>&lt;/tns5:LoanService_input>&lt;/xsl:template>&lt;/xsl:stylesheet>"
+                                    expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"
+                                    inputVariable="Receiver2-input"
+                                    name="Receiver2"
                                     outputVariable="Receiver2"
                                     tibex:xpdlId="aeaa68ad-9058-46aa-b0c8-8f5e9de45340"
                                     type="bw.generalactivities.callprocess" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
@@ -1365,12 +1399,20 @@
                                     <bpws:sources>
                                     <bpws:source linkName="Receiver2TogetOut"/>
                                     </bpws:sources>
+                                    <tibex:inputBindings>
+                                    <tibex:inputBinding coercion=""
+                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://xmlns.example.com/Loan/parameters&quot; xmlns:tns5=&quot;http://www.example.org/LoanService&quot; xmlns:tns3=&quot;uri_types&quot; version=&quot;2.0&quot;>&#xa;    &lt;xsl:param name=&quot;get.parameters&quot;/>&#xa;    &lt;xsl:template name=&quot;Receiver2-input&quot; match=&quot;/&quot;>&#xa;        &lt;tns5:LoanService_input>&#xa;            &lt;tns5:cust_input>&#xa;                &lt;tns3:tax_code>&#xa;                    &lt;xsl:value-of select=&quot;$get.parameters/tns:tax_code&quot;/>&#xa;                &lt;/tns3:tax_code>&#xa;            &lt;/tns5:cust_input>&#xa;        &lt;/tns5:LoanService_input>&#xa;    &lt;/xsl:template>&#xa;&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                                    </tibex:inputBindings>
                                     <tibex:CallProcess
                                     subProcessName="loan_b.Receiver" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions"/>
                                 </tibex:extActivity>
                             </bpws:extensionActivity>
                             <bpws:extensionActivity>
-                                <tibex:extActivity name="Receiver3"
+                                <tibex:extActivity
+                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://xmlns.example.com/Loan/parameters&quot; xmlns:tns5=&quot;http://www.example.org/LoanService&quot; xmlns:tns3=&quot;uri_types&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;get&quot;/>&lt;xsl:template name=&quot;Receiver3-input&quot; match=&quot;/&quot;>&lt;tns5:LoanService_input>&lt;tns5:cust_input>&lt;tns3:tax_code>&lt;xsl:value-of select=&quot;$get/parameters/tns:loanGetParameters/tns:tax_code&quot;/>&lt;/tns3:tax_code>&lt;/tns5:cust_input>&lt;/tns5:LoanService_input>&lt;/xsl:template>&lt;/xsl:stylesheet>"
+                                    expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"
+                                    inputVariable="Receiver3-input"
+                                    name="Receiver3"
                                     outputVariable="Receiver3"
                                     tibex:xpdlId="3b3a6885-3cf2-477f-bb76-778888d079c8"
                                     type="bw.generalactivities.callprocess" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
@@ -1380,6 +1422,10 @@
                                     <bpws:sources>
                                     <bpws:source linkName="Receiver3TogetOut"/>
                                     </bpws:sources>
+                                    <tibex:inputBindings>
+                                    <tibex:inputBinding coercion=""
+                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://xmlns.example.com/Loan/parameters&quot; xmlns:tns5=&quot;http://www.example.org/LoanService&quot; xmlns:tns3=&quot;uri_types&quot; version=&quot;2.0&quot;>&#xa;    &lt;xsl:param name=&quot;get.parameters&quot;/>&#xa;    &lt;xsl:template name=&quot;Receiver3-input&quot; match=&quot;/&quot;>&#xa;        &lt;tns5:LoanService_input>&#xa;            &lt;tns5:cust_input>&#xa;                &lt;tns3:tax_code>&#xa;                    &lt;xsl:value-of select=&quot;$get.parameters/tns:tax_code&quot;/>&#xa;                &lt;/tns3:tax_code>&#xa;            &lt;/tns5:cust_input>&#xa;        &lt;/tns5:LoanService_input>&#xa;    &lt;/xsl:template>&#xa;&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                                    </tibex:inputBindings>
                                     <tibex:CallProcess
                                     subProcessName="loan_b.Receiver" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions"/>
                                 </tibex:extActivity>
