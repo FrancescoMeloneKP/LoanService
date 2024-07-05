@@ -10,21 +10,18 @@
     xmlns:ns2="http://tns.tibco.com/bw/palette/internal/activityerror+9b583b55-cd34-4feb-afa0-86bde3bdcaca"
     xmlns:ns3="http://www.example.org/LoanBank"
     xmlns:ns4="http://www.tibco.com/pe/WriteToLogActivitySchema"
+    xmlns:ns5="http://www.example.org/LoanService"
     xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912"
     xmlns:sca-bpel="http://docs.oasis-open.org/ns/opencsa/sca-bpel/200801"
     xmlns:tibex="http://www.tibco.com/bpel/2007/extensions"
     xmlns:tibprop="http://ns.tibco.com/bw/property" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <tibex:VariableDescriptor type="MemorySaving">
-        <task name="flow1">
-            <endingVariables>
-                <variable>Loan_Bank1</variable>
-            </endingVariables>
-        </task>
         <task name="getOut">
             <endingVariables>
                 <variable>getOut-input</variable>
-                <variable>Loan_Bank2</variable>
-                <variable>Loan_Bank3</variable>
+                <variable>Receiver</variable>
+                <variable>Receiver2</variable>
+                <variable>Receiver3</variable>
                 <variable>Invoke</variable>
                 <variable>get</variable>
             </endingVariables>
@@ -49,9 +46,19 @@
                 <variable>Loan_Bank3-input</variable>
             </endingVariables>
         </task>
-        <task name="Log">
+        <task name="Receiver">
             <endingVariables>
-                <variable>Log-input</variable>
+                <variable>Receiver-input</variable>
+            </endingVariables>
+        </task>
+        <task name="Receiver2">
+            <endingVariables>
+                <variable>Receiver2-input</variable>
+            </endingVariables>
+        </task>
+        <task name="Receiver3">
+            <endingVariables>
+                <variable>Receiver3-input</variable>
             </endingVariables>
         </task>
     </tibex:VariableDescriptor>
@@ -228,23 +235,6 @@
                 </choice>
             </complexType>
         </schema>
-        <xs:schema attributeFormDefault="unqualified"
-            elementFormDefault="qualified"
-            targetNamespace="http://www.tibco.com/pe/WriteToLogActivitySchema"
-            xmlns:tns="http://www.tibco.com/pe/WriteToLogActivitySchema" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-            <xs:complexType name="LogParametersType">
-                <xs:sequence>
-                    <xs:element form="unqualified" minOccurs="0"
-                        name="msgCode" type="xs:string"/>
-                    <xs:element form="unqualified" minOccurs="0"
-                        name="loggerName" type="xs:string"/>
-                    <xs:element form="unqualified" minOccurs="0"
-                        name="logLevel" type="xs:string"/>
-                    <xs:element form="unqualified" name="message" type="xs:string"/>
-                </xs:sequence>
-            </xs:complexType>
-            <xs:element name="ActivityInput" type="tns:LogParametersType"/>
-        </xs:schema>
         <wsdl:definitions
             targetNamespace="http://xmlns.example.com/20240627110349PLT"
             xmlns:extns="http://tns.tibco.com/bw/REST"
@@ -483,8 +473,8 @@
                                     <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity/@activity/@activities.2"/>
 
                                     <layoutConstraint
-                                    x="245"
-                                    xsi:type="notation:Bounds" y="10"/>
+                                    x="440"
+                                    xsi:type="notation:Bounds" y="4"/>
                                     </children>
 
                                     <children type="4002 com.tibco.bw.core.design.process.editor.Activity_4002_Invoke">
@@ -596,7 +586,7 @@
                                     height="40"
                                     width="40"
                                     x="135"
-                                    xsi:type="notation:Bounds" y="16"/>
+                                    xsi:type="notation:Bounds" y="11"/>
                                     </children>
 
                                     <children type="4002 bw.generalactivities.callprocess">
@@ -651,8 +641,8 @@
                                     <layoutConstraint
                                     height="40"
                                     width="40"
-                                    x="131"
-                                    xsi:type="notation:Bounds" y="98"/>
+                                    x="123"
+                                    xsi:type="notation:Bounds" y="115"/>
                                     </children>
 
                                     <children type="4002 bw.generalactivities.callprocess">
@@ -707,11 +697,11 @@
                                     <layoutConstraint
                                     height="40"
                                     width="40"
-                                    x="135"
-                                    xsi:type="notation:Bounds" y="183"/>
+                                    x="123"
+                                    xsi:type="notation:Bounds" y="207"/>
                                     </children>
 
-                                    <children type="4002 bw.generalactivities.log">
+                                    <children type="4002 bw.generalactivities.callprocess">
 
                                     <children type="4017">
 
@@ -763,8 +753,120 @@
                                     <layoutConstraint
                                     height="40"
                                     width="40"
-                                    x="245"
-                                    xsi:type="notation:Bounds" y="135"/>
+                                    x="270"
+                                    xsi:type="notation:Bounds" y="11"/>
+                                    </children>
+
+                                    <children type="4002 bw.generalactivities.callprocess">
+
+                                    <children type="4017">
+
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+
+                                    <children type="4017">
+
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+
+                                    <children type="4017">
+
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+
+                                    <children type="4017">
+
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+
+                                    <styles
+                                    backgroundColor="16777215"
+                                    gradientEndColor="50431"
+                                    gradientStartColor="16777215" xsi:type="bwnotation:BackgroundStyle"/>
+
+                                    <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity/@activity/@activities.8"/>
+
+                                    <layoutConstraint
+                                    height="40"
+                                    width="40"
+                                    x="270"
+                                    xsi:type="notation:Bounds" y="115"/>
+                                    </children>
+
+                                    <children type="4002 bw.generalactivities.callprocess">
+
+                                    <children type="4017">
+
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+
+                                    <children type="4017">
+
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+
+                                    <children type="4017">
+
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+
+                                    <children type="4017">
+
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+
+                                    <styles
+                                    backgroundColor="16777215"
+                                    gradientEndColor="50431"
+                                    gradientStartColor="16777215" xsi:type="bwnotation:BackgroundStyle"/>
+
+                                    <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity/@activity/@activities.9"/>
+
+                                    <layoutConstraint
+                                    height="40"
+                                    width="40"
+                                    x="247"
+                                    xsi:type="notation:Bounds" y="207"/>
                                     </children>
 
                                     <styles xsi:type="notation:DrawerStyle"/>
@@ -790,8 +892,8 @@
                                     <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity/@activity"/>
 
                                     <layoutConstraint
-                                    height="279"
-                                    width="381" xsi:type="notation:Bounds"/>
+                                    height="292"
+                                    width="1036" xsi:type="notation:Bounds"/>
                                     </children>
 
                                     <styles xsi:type="notation:SortingStyle"/>
@@ -810,8 +912,8 @@
                                     <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity"/>
 
                                     <layoutConstraint
-                                    height="279"
-                                    width="384"
+                                    height="292"
+                                    width="1039"
                                     x="15" xsi:type="notation:Bounds"/>
                                     </children>
                                     <styles xsi:type="notation:SortingStyle"/>
@@ -826,8 +928,8 @@
                                     <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity"/>
 
                                     <layoutConstraint
-                                    height="303"
-                                    width="424" xsi:type="notation:Bounds"/>
+                                    height="316"
+                                    width="1079" xsi:type="notation:Bounds"/>
                                     </children>
                                     <styles xsi:type="notation:SortingStyle"/>
                                     <styles xsi:type="notation:FilteringStyle"/>
@@ -886,8 +988,8 @@
                                     <styles xsi:type="bwnotation:ResizingStyle"/>
                                     <element href="//0/@process/@activity/@activity/@activities.0/@messages.0"/>
                                     <layoutConstraint
-                                    height="322"
-                                    width="486"
+                                    height="335"
+                                    width="1141"
                                     x="2" xsi:type="notation:Bounds"/>
                                     </children>
                                     <styles xsi:type="notation:SortingStyle"/>
@@ -900,7 +1002,7 @@
                                     <styles xsi:type="bwnotation:ResizingStyle"/>
                                     <element href="//0/@process/@activity/@activity/@activities.0"/>
                                     <layoutConstraint
-                                    height="352" width="561" xsi:type="notation:Bounds"/>
+                                    height="365" width="991" xsi:type="notation:Bounds"/>
                                     </children>
                                     <styles xsi:type="notation:DrawerStyle"/>
                                     <styles xsi:type="notation:SortingStyle"/>
@@ -915,7 +1017,7 @@
                                     <styles xsi:type="bwnotation:ResizingStyle"/>
                                     <element href="//0/@process/@activity/@activity"/>
                                     <layoutConstraint height="384"
-                                    width="515" xsi:type="notation:Bounds"/>
+                                    width="1170" xsi:type="notation:Bounds"/>
                                 </children>
                                 <styles xsi:type="notation:SortingStyle"/>
                                 <styles xsi:type="notation:FilteringStyle"/>
@@ -924,8 +1026,7 @@
                             <styles xsi:type="bwnotation:BackgroundStyle"/>
                             <styles xsi:type="bwnotation:ResizingStyle"/>
                             <element href="//0/@process/@activity"/>
-                            <layoutConstraint height="365" width="444"
-                                x="30" xsi:type="notation:Bounds" y="20"/>
+                            <layoutConstraint height="384" width="1004" xsi:type="notation:Bounds"/>
                         </children>
                         <styles xsi:type="notation:SortingStyle"/>
                         <styles xsi:type="notation:FilteringStyle"/>
@@ -935,7 +1036,8 @@
                     <styles xsi:type="bwnotation:BackgroundStyle"/>
                     <styles xsi:type="bwnotation:ResizingStyle"/>
                     <element href="//0/@process/@activity"/>
-                    <layoutConstraint height="409" width="519" xsi:type="notation:Bounds"/>
+                    <layoutConstraint height="408" width="1004" x="1"
+                        xsi:type="notation:Bounds" y="1"/>
                 </children>
                 <styles xsi:type="notation:SortingStyle"/>
                 <styles xsi:type="notation:FilteringStyle"/>
@@ -943,7 +1045,7 @@
             </children>
             <styles fontName="Segoe UI" lineColor="0" xsi:type="notation:ShapeStyle"/>
             <element href="//0/@process"/>
-            <layoutConstraint height="460" width="860" xsi:type="notation:Bounds"/>
+            <layoutConstraint height="460" width="1515" xsi:type="notation:Bounds"/>
         </children>
         <styles xsi:type="notation:DiagramStyle"/>
         <element href="//0"/>
@@ -971,14 +1073,47 @@
         </edges>
         <edges
             source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2"
-            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0" type="4006">
+            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.5" type="4006">
             <children type="6002">
                 <layoutConstraint xsi:type="notation:Location" y="40"/>
             </children>
             <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
             <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
             <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity/@activity/@links/@children.2"/>
-            <bendpoints points="[25, -6, -85, 0]$[86, 0, -24, 6]" xsi:type="notation:RelativeBendpoints"/>
+            <bendpoints points="[25, -5, -110, 0]$[111, 0, -24, 5]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+        <edges
+            source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.3"
+            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.6" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity/@activity/@links/@children.3"/>
+            <bendpoints points="[25, 0, -73, 0]$[74, 0, -24, 0]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+        <edges
+            source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.4"
+            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.7" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity/@activity/@links/@children.4"/>
+            <bendpoints points="[25, 8, -97, 0]$[98, 0, -24, -8]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+        <edges
+            source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.7"
+            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity/@activity/@links/@children.5"/>
+            <bendpoints points="[25, -8, -147, 0]$[148, 0, -24, 8]" xsi:type="notation:RelativeBendpoints"/>
         </edges>
         <edges
             source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.1"
@@ -988,8 +1123,8 @@
             </children>
             <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
             <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
-            <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity/@activity/@links/@children.3"/>
-            <bendpoints points="[25, 22, -82, -76]$[83, 76, -24, -22]" xsi:type="notation:RelativeBendpoints"/>
+            <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity/@activity/@links/@children.6"/>
+            <bendpoints points="[23, 25, -76, -79]$[76, 80, -23, -24]" xsi:type="notation:RelativeBendpoints"/>
         </edges>
         <edges
             source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.1"
@@ -999,41 +1134,30 @@
             </children>
             <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
             <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
-            <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity/@activity/@links/@children.4"/>
-            <bendpoints points="[15, 25, -97, -159]$[97, 160, -15, -24]" xsi:type="notation:RelativeBendpoints"/>
-        </edges>
-        <edges
-            source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.3"
-            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0" type="4006">
-            <children type="6002">
-                <layoutConstraint xsi:type="notation:Location" y="40"/>
-            </children>
-            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
-            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
-            <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity/@activity/@links/@children.5"/>
-            <bendpoints points="[25, -21, -89, 78]$[90, -78, -24, 21]" xsi:type="notation:RelativeBendpoints"/>
-        </edges>
-        <edges
-            source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.4"
-            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0" type="4006">
-            <children type="6002">
-                <layoutConstraint xsi:type="notation:Location" y="40"/>
-            </children>
-            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
-            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
-            <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity/@activity/@links/@children.6"/>
-            <bendpoints points="[14, -24, -95, 161]$[95, -160, -14, 25]" xsi:type="notation:RelativeBendpoints"/>
-        </edges>
-        <edges
-            source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2"
-            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.5" type="4006">
-            <children type="6002">
-                <layoutConstraint xsi:type="notation:Location" y="40"/>
-            </children>
-            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
-            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
             <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity/@activity/@links/@children.7"/>
-            <bendpoints points="[19, 25, -75, -99]$[75, 100, -19, -24]" xsi:type="notation:RelativeBendpoints"/>
+            <bendpoints points="[10, 25, -66, -171]$[67, 172, -9, -24]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+        <edges
+            source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.5"
+            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity/@activity/@links/@children.8"/>
+            <bendpoints points="[25, -8, -566, 0]$[567, 0, -24, 8]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+        <edges
+            source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.6"
+            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2/@children.0/@children.1/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@activities.0/@messages.0/@activity/@activity/@links/@children.9"/>
+            <bendpoints points="[25, -5, -566, 107]$[567, -107, -24, 5]" xsi:type="notation:RelativeBendpoints"/>
         </edges>
     </notation:Diagram>
     <tibex:NamespaceRegistry enabled="true">
@@ -1084,14 +1208,19 @@
         <bpws:variable element="ns0:ErrorReport" name="_error" sca-bpel:internal="true"/>
         <bpws:variable element="ns3:LoanBank_input"
             name="Loan_Bank1-input" sca-bpel:internal="true"/>
-        <bpws:variable element="ns3:LoanBank_output" name="Loan_Bank1" sca-bpel:internal="true"/>
         <bpws:variable element="ns3:LoanBank_input"
             name="Loan_Bank2-input" sca-bpel:internal="true"/>
-        <bpws:variable element="ns3:LoanBank_output" name="Loan_Bank2" sca-bpel:internal="true"/>
         <bpws:variable element="ns3:LoanBank_input"
             name="Loan_Bank3-input" sca-bpel:internal="true"/>
-        <bpws:variable element="ns3:LoanBank_output" name="Loan_Bank3" sca-bpel:internal="true"/>
-        <bpws:variable element="ns4:ActivityInput" name="Log-input" sca-bpel:internal="true"/>
+        <bpws:variable element="ns3:LoanBank_output" name="Receiver" sca-bpel:internal="true"/>
+        <bpws:variable element="ns3:LoanBank_output" name="Receiver2" sca-bpel:internal="true"/>
+        <bpws:variable element="ns3:LoanBank_output" name="Receiver3" sca-bpel:internal="true"/>
+        <bpws:variable element="ns5:LoanService_input"
+            name="Receiver-input" sca-bpel:internal="true"/>
+        <bpws:variable element="ns5:LoanService_input"
+            name="Receiver2-input" sca-bpel:internal="true"/>
+        <bpws:variable element="ns5:LoanService_input"
+            name="Receiver3-input" sca-bpel:internal="true"/>
     </bpws:variables>
     <bpws:extensions>
         <bpws:extension mustUnderstand="no" namespace="http://www.eclipse.org/gmf/runtime/1.0.2/notation"/>
@@ -1113,12 +1242,15 @@
                             <bpws:links>
                                 <bpws:link name="OnMessageStartToInvoke" tibex:linkType="SUCCESS"/>
                                 <bpws:link name="InvokeToCallProcess" tibex:linkType="SUCCESS"/>
-                                <bpws:link name="CallProcessTogetOut" tibex:linkType="SUCCESS"/>
-                                <bpws:link name="InvokeToCallProcess1" tibex:linkType="SUCCESS"/>
-                                <bpws:link name="InvokeToCallProcess11" tibex:linkType="SUCCESS"/>
-                                <bpws:link name="Loan_Bank2TogetOut" tibex:linkType="SUCCESS"/>
-                                <bpws:link name="Loan_Bank3TogetOut" tibex:linkType="SUCCESS"/>
-                                <bpws:link name="Loan_Bank1ToLog" tibex:linkType="SUCCESS"/>
+                                <bpws:link
+                                    name="Loan_Bank1ToCallProcess" tibex:linkType="SUCCESS"/>
+                                <bpws:link name="Loan_Bank2ToReceiver2" tibex:linkType="SUCCESS"/>
+                                <bpws:link name="Loan_Bank3ToReceiver3" tibex:linkType="SUCCESS"/>
+                                <bpws:link name="Receiver3TogetOut" tibex:linkType="SUCCESS"/>
+                                <bpws:link name="InvokeToLoan_Bank2" tibex:linkType="SUCCESS"/>
+                                <bpws:link name="InvokeToLoan_Bank3" tibex:linkType="SUCCESS"/>
+                                <bpws:link name="ReceiverTogetOut" tibex:linkType="SUCCESS"/>
+                                <bpws:link name="Receiver2TogetOut" tibex:linkType="SUCCESS"/>
                             </bpws:links>
                             <bpws:empty name="OnMessageStart"
                                 tibex:constructor="onMessageStart" tibex:xpdlId="9316bce0-c2f1-4b1e-9b67-058df3fdc243">
@@ -1133,14 +1265,14 @@
                                 tibex:xpdlId="861ffb03-ba8c-4ac0-b0d1-ced44e080a10" variable="getOut-input">
                                 <tibex:inputBindings>
                                     <tibex:partBinding
-                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns4=&quot;http://xmlns.example.com/20240627110349PLT&quot; xmlns:tns5=&quot;http://www.example.org/LoanService&quot; xmlns:tns6=&quot;http://www.example.org/LoanBank&quot; version=&quot;2.0&quot;>&#xa;    &lt;xsl:param name=&quot;Loan_Bank3&quot;/>&#xa;    &lt;xsl:param name=&quot;Loan_Bank2&quot;/>&#xa;    &lt;xsl:param name=&quot;Loan_Bank1&quot;/>&#xa;    &lt;xsl:template name=&quot;getOut-input&quot; match=&quot;/&quot;>&#xa;        &lt;tns5:LoanService_output>&#xa;            &lt;tns5:bank_cond_output>&#xa;                &lt;xsl:copy-of select=&quot;$Loan_Bank1/tns6:bank_cond_output/ancestor-or-self::*/namespace::node()&quot;/>&#xa;                &lt;xsl:copy-of select=&quot;$Loan_Bank1/tns6:bank_cond_output/@*&quot;/>&#xa;                &lt;xsl:copy-of select=&quot;$Loan_Bank1/tns6:bank_cond_output/node()&quot;/>&#xa;            &lt;/tns5:bank_cond_output>&#xa;            &lt;tns5:bank_cond_output>&#xa;                &lt;xsl:copy-of select=&quot;$Loan_Bank2/tns6:bank_cond_output/ancestor-or-self::*/namespace::node()&quot;/>&#xa;                &lt;xsl:copy-of select=&quot;$Loan_Bank2/tns6:bank_cond_output/@*&quot;/>&#xa;                &lt;xsl:copy-of select=&quot;$Loan_Bank2/tns6:bank_cond_output/node()&quot;/>&#xa;            &lt;/tns5:bank_cond_output>&#xa;            &lt;tns5:bank_cond_output>&#xa;                &lt;xsl:copy-of select=&quot;$Loan_Bank3/tns6:bank_cond_output/ancestor-or-self::*/namespace::node()&quot;/>&#xa;                &lt;xsl:copy-of select=&quot;$Loan_Bank3/tns6:bank_cond_output/@*&quot;/>&#xa;                &lt;xsl:copy-of select=&quot;$Loan_Bank3/tns6:bank_cond_output/node()&quot;/>&#xa;            &lt;/tns5:bank_cond_output>&#xa;        &lt;/tns5:LoanService_output>&#xa;    &lt;/xsl:template>&#xa;&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns4=&quot;http://xmlns.example.com/20240627110349PLT&quot; xmlns:tns5=&quot;http://www.example.org/LoanService&quot; xmlns:tns6=&quot;http://www.example.org/LoanBank&quot; version=&quot;2.0&quot;>&#xa;    &lt;xsl:param name=&quot;Receiver&quot;/>&#xa;    &lt;xsl:param name=&quot;Receiver3&quot;/>&#xa;    &lt;xsl:param name=&quot;Receiver2&quot;/>&#xa;    &lt;xsl:template name=&quot;getOut-input&quot; match=&quot;/&quot;>&#xa;        &lt;tns5:LoanService_output>&#xa;            &lt;tns5:bank_cond_output>&#xa;                &lt;xsl:copy-of select=&quot;$Receiver/tns6:bank_cond_output/ancestor-or-self::*/namespace::node()&quot;/>&#xa;                &lt;xsl:copy-of select=&quot;$Receiver/tns6:bank_cond_output/@*&quot;/>&#xa;                &lt;xsl:copy-of select=&quot;$Receiver/tns6:bank_cond_output/node()&quot;/>&#xa;            &lt;/tns5:bank_cond_output>&#xa;            &lt;tns5:bank_cond_output>&#xa;                &lt;xsl:copy-of select=&quot;$Receiver2/tns6:bank_cond_output/ancestor-or-self::*/namespace::node()&quot;/>&#xa;                &lt;xsl:copy-of select=&quot;$Receiver2/tns6:bank_cond_output/@*&quot;/>&#xa;                &lt;xsl:copy-of select=&quot;$Receiver2/tns6:bank_cond_output/node()&quot;/>&#xa;            &lt;/tns5:bank_cond_output>&#xa;            &lt;tns5:bank_cond_output>&#xa;                &lt;xsl:copy-of select=&quot;$Receiver3/tns6:bank_cond_output/ancestor-or-self::*/namespace::node()&quot;/>&#xa;                &lt;xsl:copy-of select=&quot;$Receiver3/tns6:bank_cond_output/@*&quot;/>&#xa;                &lt;xsl:copy-of select=&quot;$Receiver3/tns6:bank_cond_output/node()&quot;/>&#xa;            &lt;/tns5:bank_cond_output>&#xa;        &lt;/tns5:LoanService_output>&#xa;    &lt;/xsl:template>&#xa;&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
                                 </tibex:inputBindings>
                                 <tibex:inputBinding expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tns4="http://xmlns.example.com/20240627110349PLT" xmlns:tns5="http://www.example.org/LoanService" xmlns:tns6="http://www.example.org/LoanBank" version="2.0"&gt;&lt;xsl:param name="Loan_Bank3"/&gt;&lt;xsl:param name="Loan_Bank2"/&gt;&lt;xsl:param name="Loan_Bank1"/&gt;&lt;xsl:template name="getOut-input" match="/"&gt;&lt;tns4:getResponse&gt;&lt;item&gt;&lt;tns5:LoanService_output&gt;&lt;tns5:bank_cond_output&gt;&lt;xsl:copy-of select="$Loan_Bank1/tns6:bank_cond_output/ancestor-or-self::*/namespace::node()"/&gt;&lt;xsl:copy-of select="$Loan_Bank1/tns6:bank_cond_output/@*"/&gt;&lt;xsl:copy-of select="$Loan_Bank1/tns6:bank_cond_output/node()"/&gt;&lt;/tns5:bank_cond_output&gt;&lt;tns5:bank_cond_output&gt;&lt;xsl:copy-of select="$Loan_Bank2/tns6:bank_cond_output/ancestor-or-self::*/namespace::node()"/&gt;&lt;xsl:copy-of select="$Loan_Bank2/tns6:bank_cond_output/@*"/&gt;&lt;xsl:copy-of select="$Loan_Bank2/tns6:bank_cond_output/node()"/&gt;&lt;/tns5:bank_cond_output&gt;&lt;tns5:bank_cond_output&gt;&lt;xsl:copy-of select="$Loan_Bank3/tns6:bank_cond_output/ancestor-or-self::*/namespace::node()"/&gt;&lt;xsl:copy-of select="$Loan_Bank3/tns6:bank_cond_output/@*"/&gt;&lt;xsl:copy-of select="$Loan_Bank3/tns6:bank_cond_output/node()"/&gt;&lt;/tns5:bank_cond_output&gt;&lt;/tns5:LoanService_output&gt;&lt;/item&gt;&lt;/tns4:getResponse&gt;&lt;/xsl:template&gt;&lt;/xsl:stylesheet&gt;</tibex:inputBinding>
+&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:tns4="http://xmlns.example.com/20240627110349PLT" xmlns:tns5="http://www.example.org/LoanService" xmlns:tns6="http://www.example.org/LoanBank" version="2.0"&gt;&lt;xsl:param name="Receiver"/&gt;&lt;xsl:param name="Receiver3"/&gt;&lt;xsl:param name="Receiver2"/&gt;&lt;xsl:template name="getOut-input" match="/"&gt;&lt;tns4:getResponse&gt;&lt;item&gt;&lt;tns5:LoanService_output&gt;&lt;tns5:bank_cond_output&gt;&lt;xsl:copy-of select="$Receiver/tns6:bank_cond_output/ancestor-or-self::*/namespace::node()"/&gt;&lt;xsl:copy-of select="$Receiver/tns6:bank_cond_output/@*"/&gt;&lt;xsl:copy-of select="$Receiver/tns6:bank_cond_output/node()"/&gt;&lt;/tns5:bank_cond_output&gt;&lt;tns5:bank_cond_output&gt;&lt;xsl:copy-of select="$Receiver2/tns6:bank_cond_output/ancestor-or-self::*/namespace::node()"/&gt;&lt;xsl:copy-of select="$Receiver2/tns6:bank_cond_output/@*"/&gt;&lt;xsl:copy-of select="$Receiver2/tns6:bank_cond_output/node()"/&gt;&lt;/tns5:bank_cond_output&gt;&lt;tns5:bank_cond_output&gt;&lt;xsl:copy-of select="$Receiver3/tns6:bank_cond_output/ancestor-or-self::*/namespace::node()"/&gt;&lt;xsl:copy-of select="$Receiver3/tns6:bank_cond_output/@*"/&gt;&lt;xsl:copy-of select="$Receiver3/tns6:bank_cond_output/node()"/&gt;&lt;/tns5:bank_cond_output&gt;&lt;/tns5:LoanService_output&gt;&lt;/item&gt;&lt;/tns4:getResponse&gt;&lt;/xsl:template&gt;&lt;/xsl:stylesheet&gt;</tibex:inputBinding>
                                 <bpws:targets>
-                                    <bpws:target linkName="CallProcessTogetOut"/>
-                                    <bpws:target linkName="Loan_Bank2TogetOut"/>
-                                    <bpws:target linkName="Loan_Bank3TogetOut"/>
+                                    <bpws:target linkName="Receiver3TogetOut"/>
+                                    <bpws:target linkName="ReceiverTogetOut"/>
+                                    <bpws:target linkName="Receiver2TogetOut"/>
                                 </bpws:targets>
                             </bpws:reply>
                             <bpws:invoke inputVariable="Invoke-input"
@@ -1159,8 +1291,8 @@
                                 </bpws:targets>
                                 <bpws:sources>
                                     <bpws:source linkName="InvokeToCallProcess"/>
-                                    <bpws:source linkName="InvokeToCallProcess1"/>
-                                    <bpws:source linkName="InvokeToCallProcess11"/>
+                                    <bpws:source linkName="InvokeToLoan_Bank2"/>
+                                    <bpws:source linkName="InvokeToLoan_Bank3"/>
                                 </bpws:sources>
                             </bpws:invoke>
                             <bpws:extensionActivity>
@@ -1169,15 +1301,13 @@
                                     expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"
                                     inputVariable="Loan_Bank1-input"
                                     name="Loan_Bank1"
-                                    outputVariable="Loan_Bank1"
                                     tibex:xpdlId="3a34666c-5d1a-4606-b23a-78b8008b3146"
                                     type="bw.generalactivities.callprocess" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
                                     <bpws:targets>
                                     <bpws:target linkName="InvokeToCallProcess"/>
                                     </bpws:targets>
                                     <bpws:sources>
-                                    <bpws:source linkName="CallProcessTogetOut"/>
-                                    <bpws:source linkName="Loan_Bank1ToLog"/>
+                                    <bpws:source linkName="Loan_Bank1ToCallProcess"/>
                                     </bpws:sources>
                                     <tibex:inputBindings>
                                     <tibex:inputBinding coercion=""
@@ -1193,14 +1323,13 @@
                                     expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"
                                     inputVariable="Loan_Bank2-input"
                                     name="Loan_Bank2"
-                                    outputVariable="Loan_Bank2"
                                     tibex:xpdlId="6e499344-4c4a-4ccc-b07c-b9e09197e5d8"
                                     type="bw.generalactivities.callprocess" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
                                     <bpws:targets>
-                                    <bpws:target linkName="InvokeToCallProcess1"/>
+                                    <bpws:target linkName="InvokeToLoan_Bank2"/>
                                     </bpws:targets>
                                     <bpws:sources>
-                                    <bpws:source linkName="Loan_Bank2TogetOut"/>
+                                    <bpws:source linkName="Loan_Bank2ToReceiver2"/>
                                     </bpws:sources>
                                     <tibex:inputBindings>
                                     <tibex:inputBinding coercion=""
@@ -1216,14 +1345,13 @@
                                     expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"
                                     inputVariable="Loan_Bank3-input"
                                     name="Loan_Bank3"
-                                    outputVariable="Loan_Bank3"
                                     tibex:xpdlId="8884d6a8-0cbe-441b-936b-03e7d0e4bb0a"
                                     type="bw.generalactivities.callprocess" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
                                     <bpws:targets>
-                                    <bpws:target linkName="InvokeToCallProcess11"/>
+                                    <bpws:target linkName="InvokeToLoan_Bank3"/>
                                     </bpws:targets>
                                     <bpws:sources>
-                                    <bpws:source linkName="Loan_Bank3TogetOut"/>
+                                    <bpws:source linkName="Loan_Bank3ToReceiver3"/>
                                     </bpws:sources>
                                     <tibex:inputBindings>
                                     <tibex:inputBinding coercion=""
@@ -1234,36 +1362,73 @@
                                 </tibex:extActivity>
                             </bpws:extensionActivity>
                             <bpws:extensionActivity>
-                                <tibex:activityExtension
-                                    inputVariable="Log-input" name="Log"
-                                    tibex:xpdlId="5da8faee-82a8-40eb-a050-d674165028a2" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
+                                <tibex:extActivity
+                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://xmlns.example.com/Loan/parameters&quot; xmlns:tns5=&quot;http://www.example.org/LoanService&quot; xmlns:tns3=&quot;uri_types&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;get&quot;/>&lt;xsl:template name=&quot;Receiver-input&quot; match=&quot;/&quot;>&lt;tns5:LoanService_input>&lt;tns5:cust_input>&lt;tns3:tax_code>&lt;xsl:value-of select=&quot;$get/parameters/tns:loanGetParameters/tns:tax_code&quot;/>&lt;/tns3:tax_code>&lt;/tns5:cust_input>&lt;/tns5:LoanService_input>&lt;/xsl:template>&lt;/xsl:stylesheet>"
+                                    expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"
+                                    inputVariable="Receiver-input"
+                                    name="Receiver"
+                                    outputVariable="Receiver"
+                                    tibex:xpdlId="2ed4459a-61b1-40bf-aa17-65f06496170b"
+                                    type="bw.generalactivities.callprocess" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
                                     <bpws:targets>
-                                    <bpws:target linkName="Loan_Bank1ToLog"/>
+                                    <bpws:target linkName="Loan_Bank1ToCallProcess"/>
                                     </bpws:targets>
+                                    <bpws:sources>
+                                    <bpws:source linkName="ReceiverTogetOut"/>
+                                    </bpws:sources>
                                     <tibex:inputBindings>
-                                    <tibex:inputBinding
-                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns7=&quot;http://www.tibco.com/pe/WriteToLogActivitySchema&quot; xmlns:tns3=&quot;uri_types&quot; xmlns:tns6=&quot;http://www.example.org/LoanBank&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;Loan_Bank1&quot;/>&lt;xsl:template name=&quot;Log-input&quot; match=&quot;/&quot;>&lt;tns7:ActivityInput>&lt;message>&lt;xsl:value-of select=&quot;concat($Loan_Bank1/tns6:bank_cond_output/tns3:bank_name,',',xsd:string($Loan_Bank1/tns6:bank_cond_output/tns3:taeg),',',xsd:string($Loan_Bank1/tns6:bank_cond_output/tns3:tan),',',xsd:string($Loan_Bank1/tns6:bank_cond_output/tns3:payments_number),',',xsd:string($Loan_Bank1/tns6:bank_cond_output/tns3:monthly_amount))&quot;/>&lt;/message>&lt;/tns7:ActivityInput>&lt;/xsl:template>&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                                    <tibex:inputBinding coercion=""
+                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://xmlns.example.com/Loan/parameters&quot; xmlns:tns5=&quot;http://www.example.org/LoanService&quot; xmlns:tns3=&quot;uri_types&quot; version=&quot;2.0&quot;>&#xa;    &lt;xsl:param name=&quot;get.parameters&quot;/>&#xa;    &lt;xsl:template name=&quot;Receiver-input&quot; match=&quot;/&quot;>&#xa;        &lt;tns5:LoanService_input>&#xa;            &lt;tns5:cust_input>&#xa;                &lt;tns3:tax_code>&#xa;                    &lt;xsl:value-of select=&quot;$get.parameters/tns:tax_code&quot;/>&#xa;                &lt;/tns3:tax_code>&#xa;            &lt;/tns5:cust_input>&#xa;        &lt;/tns5:LoanService_input>&#xa;    &lt;/xsl:template>&#xa;&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
                                     </tibex:inputBindings>
-                                    <tibex:config>
-                                    <bwext:BWActivity
-                                    activityTypeID="bw.generalactivities.log"
-                                    version="6.0.0.001"
-                                    xmlns:activityconfig="http://tns.tibco.com/bw/model/activityconfig"
-                                    xmlns:bwext="http://tns.tibco.com/bw/model/core/bwext"
-                                    xmlns:generalactivities="http://ns.tibco.com/bw/palette/generalactivities" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-                                    <activityConfig>
-                                    <properties
-                                    name="config" xsi:type="activityconfig:EMFProperty">
-                                    <type href="http://ns.tibco.com/bw/palette/generalactivities#//Log"/>
-                                    <value
-                                    controlBy="Application"
-                                    role="Info"
-                                    suppressJobInfo="true" xsi:type="generalactivities:Log"/>
-                                    </properties>
-                                    </activityConfig>
-                                    </bwext:BWActivity>
-                                    </tibex:config>
-                                </tibex:activityExtension>
+                                    <tibex:CallProcess
+                                    subProcessName="loan_b.Receiver" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions"/>
+                                </tibex:extActivity>
+                            </bpws:extensionActivity>
+                            <bpws:extensionActivity>
+                                <tibex:extActivity
+                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://xmlns.example.com/Loan/parameters&quot; xmlns:tns5=&quot;http://www.example.org/LoanService&quot; xmlns:tns3=&quot;uri_types&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;get&quot;/>&lt;xsl:template name=&quot;Receiver2-input&quot; match=&quot;/&quot;>&lt;tns5:LoanService_input>&lt;tns5:cust_input>&lt;tns3:tax_code>&lt;xsl:value-of select=&quot;$get/parameters/tns:loanGetParameters/tns:tax_code&quot;/>&lt;/tns3:tax_code>&lt;/tns5:cust_input>&lt;/tns5:LoanService_input>&lt;/xsl:template>&lt;/xsl:stylesheet>"
+                                    expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"
+                                    inputVariable="Receiver2-input"
+                                    name="Receiver2"
+                                    outputVariable="Receiver2"
+                                    tibex:xpdlId="aeaa68ad-9058-46aa-b0c8-8f5e9de45340"
+                                    type="bw.generalactivities.callprocess" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
+                                    <bpws:targets>
+                                    <bpws:target linkName="Loan_Bank2ToReceiver2"/>
+                                    </bpws:targets>
+                                    <bpws:sources>
+                                    <bpws:source linkName="Receiver2TogetOut"/>
+                                    </bpws:sources>
+                                    <tibex:inputBindings>
+                                    <tibex:inputBinding coercion=""
+                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://xmlns.example.com/Loan/parameters&quot; xmlns:tns5=&quot;http://www.example.org/LoanService&quot; xmlns:tns3=&quot;uri_types&quot; version=&quot;2.0&quot;>&#xa;    &lt;xsl:param name=&quot;get.parameters&quot;/>&#xa;    &lt;xsl:template name=&quot;Receiver2-input&quot; match=&quot;/&quot;>&#xa;        &lt;tns5:LoanService_input>&#xa;            &lt;tns5:cust_input>&#xa;                &lt;tns3:tax_code>&#xa;                    &lt;xsl:value-of select=&quot;$get.parameters/tns:tax_code&quot;/>&#xa;                &lt;/tns3:tax_code>&#xa;            &lt;/tns5:cust_input>&#xa;        &lt;/tns5:LoanService_input>&#xa;    &lt;/xsl:template>&#xa;&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                                    </tibex:inputBindings>
+                                    <tibex:CallProcess
+                                    subProcessName="loan_b.Receiver" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions"/>
+                                </tibex:extActivity>
+                            </bpws:extensionActivity>
+                            <bpws:extensionActivity>
+                                <tibex:extActivity
+                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://xmlns.example.com/Loan/parameters&quot; xmlns:tns5=&quot;http://www.example.org/LoanService&quot; xmlns:tns3=&quot;uri_types&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;get&quot;/>&lt;xsl:template name=&quot;Receiver3-input&quot; match=&quot;/&quot;>&lt;tns5:LoanService_input>&lt;tns5:cust_input>&lt;tns3:tax_code>&lt;xsl:value-of select=&quot;$get/parameters/tns:loanGetParameters/tns:tax_code&quot;/>&lt;/tns3:tax_code>&lt;/tns5:cust_input>&lt;/tns5:LoanService_input>&lt;/xsl:template>&lt;/xsl:stylesheet>"
+                                    expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"
+                                    inputVariable="Receiver3-input"
+                                    name="Receiver3"
+                                    outputVariable="Receiver3"
+                                    tibex:xpdlId="3b3a6885-3cf2-477f-bb76-778888d079c8"
+                                    type="bw.generalactivities.callprocess" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
+                                    <bpws:targets>
+                                    <bpws:target linkName="Loan_Bank3ToReceiver3"/>
+                                    </bpws:targets>
+                                    <bpws:sources>
+                                    <bpws:source linkName="Receiver3TogetOut"/>
+                                    </bpws:sources>
+                                    <tibex:inputBindings>
+                                    <tibex:inputBinding coercion=""
+                                    expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns=&quot;http://xmlns.example.com/Loan/parameters&quot; xmlns:tns5=&quot;http://www.example.org/LoanService&quot; xmlns:tns3=&quot;uri_types&quot; version=&quot;2.0&quot;>&#xa;    &lt;xsl:param name=&quot;get.parameters&quot;/>&#xa;    &lt;xsl:template name=&quot;Receiver3-input&quot; match=&quot;/&quot;>&#xa;        &lt;tns5:LoanService_input>&#xa;            &lt;tns5:cust_input>&#xa;                &lt;tns3:tax_code>&#xa;                    &lt;xsl:value-of select=&quot;$get.parameters/tns:tax_code&quot;/>&#xa;                &lt;/tns3:tax_code>&#xa;            &lt;/tns5:cust_input>&#xa;        &lt;/tns5:LoanService_input>&#xa;    &lt;/xsl:template>&#xa;&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                                    </tibex:inputBindings>
+                                    <tibex:CallProcess
+                                    subProcessName="loan_b.Receiver" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions"/>
+                                </tibex:extActivity>
                             </bpws:extensionActivity>
                         </bpws:flow>
                     </bpws:scope>
